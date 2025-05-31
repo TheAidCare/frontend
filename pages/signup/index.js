@@ -1,17 +1,20 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { saveUser } from '@/utils/auth';
+import { IoLockClosedOutline, IoMailOutline, IoPersonOutline } from "react-icons/io5";
+import Link from 'next/link';
+import styles from "@/styles/signup.module.css";
 
 export default function SignupPage() {
   const router = useRouter();
 
   const [orgName, setOrgName] = useState('');
-  const [adminName, setAdminName] = useState('');
   const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSignup = () => {
-    if (!orgName || !adminName || !email) {
+    if (!orgName || !password || !email) {
       alert('Please fill out all fields.');
       return;
     }
@@ -24,58 +27,74 @@ export default function SignupPage() {
     router.push(`/signup/success?orgId=${orgId}`);
   };
 
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
-      <div className="max-w-md w-full bg-white p-6 rounded-md shadow">
-        <h1 className="text-2xl font-bold mb-4">Sign Up Your Organization</h1>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleSignup();
-          }}
-          className="space-y-4"
+    <div className={styles.container}>
+      <h1 className={styles.heading}>Create Your Account</h1>
+
+      <form 
+        className={styles.formLayout}
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSignup();
+        }}
+      >
+        <section className={styles.formInputLayout}>
+          <div className={styles.formInputContainer}>
+            <label
+              htmlFor="orgName" aria-label='Organization Name'
+              className={styles.formInputLabel}  
+            >
+              <IoPersonOutline />
+            </label>
+            <input
+              type="text" name="orgName" id="orgName"
+              value={orgName} onChange={(e) => setOrgName(e.target.value)}
+              placeholder="Organization Name" required
+              className={styles.formInputField}
+            />
+          </div>
+          <div className={styles.formInputContainer}>
+            <label
+              htmlFor="orgEmail" aria-label='Email'
+              className={styles.formInputLabel}
+            >
+              <IoMailOutline />
+            </label>
+            <input
+              type="email" name="orgEmail" id="orgEmail"
+              value={email} onChange={(e) => setEmail(e.target.value)}
+              placeholder="Organization Email" required
+              className={styles.formInputField}
+            />
+          </div>
+          <div className={styles.formInputContainer}>
+            <label
+              htmlFor="orgPassword" aria-label='Password'
+              className={styles.formInputLabel}
+            >
+              <IoLockClosedOutline />
+            </label>
+            <input
+              type="password" name="orgPassword" id="orgPassword"
+              value={password} onChange={(e) => setPassword(e.target.value)}
+              placeholder="Create a password" required
+              className={styles.formInputField}
+            />
+          </div>
+        </section>
+
+        <button
+          type="submit" disabled={loading}
+          className={styles.formSubmitButton}
         >
-          <div>
-            <label className="block text-sm font-medium">Organization Name</label>
-            <input
-              type="text"
-              value={orgName}
-              onChange={(e) => setOrgName(e.target.value)}
-              className="mt-1 block w-full border border-gray-300 rounded px-3 py-2"
-              placeholder="e.g., Health Connect"
-            />
-          </div>
+          {loading ? "Creating..." : "Register"}
+        </button>
+      </form>
 
-          <div>
-            <label className="block text-sm font-medium">Admin Name</label>
-            <input
-              type="text"
-              value={adminName}
-              onChange={(e) => setAdminName(e.target.value)}
-              className="mt-1 block w-full border border-gray-300 rounded px-3 py-2"
-              placeholder="Your full name"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 block w-full border border-gray-300 rounded px-3 py-2"
-              placeholder="email@example.com"
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
-          >
-            {loading ? 'Creating...' : 'Create Organization'}
-          </button>
-        </form>
+      <div className={styles.loginRedirectContainer}>
+        <p>Already Have An Account?</p>
+        <Link href="/login">Sign In</Link>
       </div>
     </div>
   );
