@@ -13,18 +13,43 @@ export default function SignupPage() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleSignup = () => {
+  const handleSignup = async () => {
     if (!orgName || !password || !email) {
       alert('Please fill out all fields.');
       return;
     }
 
     setLoading(true);
-
-    const orgId = orgName.toLowerCase().replace(/\s+/g, '-');
-    saveUser({ name: adminName, orgId, role: 'Admin' });
-
-    router.push(`/signup/success?orgId=${orgId}`);
+    
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/organization/with-root-user`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: orgName,
+          firstName: "Admin",
+          lastName: orgName,
+          email,
+          password,
+          passwordConfirm: password,
+        }),
+      });
+    
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error.message || 'Signup failed');
+      }
+    
+      const data = await res.json();
+      const info = data.data
+      localStorage.setItem('aidcare_user', JSON.stringify(info.user));
+      localStorage.setItem('aidcare_token', info.user.token || "testtoken");
+      router.push(`/signup/success?orgId=${info.user.organization}&orgName=${info.organization.name}`);
+    } catch (err) {
+      alert(err.message);
+      setLoading(false);
+    }
+    
   };
 
 
@@ -94,7 +119,7 @@ export default function SignupPage() {
 
       <div className={styles.loginRedirectContainer}>
         <p>Already Have An Account?</p>
-        <Link href="/login">Sign In</Link>
+        <Link href="/login">Log In</Link>
       </div>
     </div>
   );
