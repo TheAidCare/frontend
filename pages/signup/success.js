@@ -22,7 +22,7 @@ export default function SignupSuccessPage() {
     }
 
     if (orgId) {
-      setInviteLink(`${window.location.origin}/signup/user?orgId=${orgId}`);
+      setInviteLink(`${window.location.origin}/onboard?orgId=${orgId}`);
     }
 
     setLoading(false);

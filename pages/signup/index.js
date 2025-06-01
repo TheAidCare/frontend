@@ -14,11 +14,6 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
 
   const handleSignup = async () => {
-    if (!orgName || !password || !email) {
-      alert('Please fill out all fields.');
-      return;
-    }
-
     setLoading(true);
     
     try {
