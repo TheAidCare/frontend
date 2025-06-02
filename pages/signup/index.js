@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import { saveUser } from '@/utils/auth';
 import { IoLockClosedOutline, IoMailOutline, IoPersonOutline } from "react-icons/io5";
 import Link from 'next/link';
 import styles from "@/styles/signup.module.css";

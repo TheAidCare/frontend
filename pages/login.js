@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import { saveUser } from '@/utils/auth';
 import styles from "@/styles/signup.module.css"
 import { IoLockClosedOutline, IoMailOutline } from 'react-icons/io5';
 import Link from 'next/link';
@@ -30,7 +29,6 @@ export default function Login() {
       }
     
       const data = await res.json();
-      console.log(data)
       const info = data.data
       localStorage.setItem('aidcare_user', JSON.stringify(info.user));
       localStorage.setItem('aidcare_token', info.token);

@@ -39,7 +39,6 @@ const OnboardUser = () => {
 
       const data = await res.json();
       const info = data.data;
-      console.log(info);
       localStorage.setItem('aidcare_user', JSON.stringify(info.user));
       localStorage.setItem('aidcare_token', info.token);
       router.push(`/app`);

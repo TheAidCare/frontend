@@ -1,0 +1,70 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  justify-content: flex-start;
+  z-index: 999;
+  cursor: pointer;
+}
+
+.sidebar {
+  cursor: default;
+  width: 80%;
+  height: 100%;
+  background-color: hsl(0, 0%, 95%);
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  transition: transform 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebarTop {
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+  padding: 20px 0;
+  border-bottom: 1px solid #E2E4E5;
+}
+
+.searchForm {
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  padding: 15px 6px;
+  padding-right: 0px;
+  color: #6B728080;
+  column-gap: 5px;
+  width: 90%;
+  margin: 0 auto;
+  border: 1px solid #E1E1E1;
+  border-radius: 7px;
+}
+.searchForm:has(.searchInput:focus) {
+  color: #0F0F0F; 
+}
+.searchButton {
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+.searchInput {
+  outline: none;
+}
+
+.createNewPatientBtn {
+  width: 90%;
+  margin: 0 auto;
+  background-color: #007AFF;
+  color: #FFFFFF;
+  padding: 10px 0;
+  border-radius: 7px;
+  cursor: pointer;
+}
+
+.sidebarBottom {
+  margin-top: auto;
+}
