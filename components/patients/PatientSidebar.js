@@ -9,6 +9,12 @@ export default function PatientSidebar() {
     if (u) setUser(u);
   }, []);
 
+  const fullRole = {
+    organization: user?.lastName,
+    consultant: "Clinical Consultant",
+    chw: "Community Health Worker",
+  }
+
   return (
     <div className="p-4 flex flex-col h-full justify-between">
       <div>
@@ -34,8 +40,10 @@ export default function PatientSidebar() {
 
       {user && (
         <div className="mt-6 border-t pt-4 text-sm text-gray-600">
-          <p className="font-semibold">{user.name}</p>
-          <p className="text-xs capitalize">{user.role} - {user.orgId}</p>
+          <p className="font-semibold">{user.firstName}</p>
+          <p className="text-xs capitalize">
+            {fullRole[user.role]}
+          </p>
 
           <button
             onClick={() => {

@@ -38,7 +38,12 @@
   font-weight: 500;
 }
 
-.formInputContainer:has(input:focus) {
+select.formInputField {
+  cursor: pointer;
+}
+
+.formInputContainer:has(input:focus),
+.formInputContainer:has(select:focus) {
   border-color: #C2C3CB;
   color: initial;
 }
@@ -69,4 +74,23 @@
 }
 .loginRedirectContainer > a {
   text-decoration: underline;
+}
+
+
+
+/* ---------------------------------- */
+
+.headingContainer {
+  margin-bottom: 40px;
+}
+.headingContainer h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  line-height: 1.25;
+  margin-bottom: 10px;
+}
+.headingContainer p {
+  font-size: .95rem;
+  font-weight: 500;
+  color: hsl(0, 0%, 60%);
 }

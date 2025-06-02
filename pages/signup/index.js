@@ -38,7 +38,7 @@ export default function SignupPage() {
       const data = await res.json();
       const info = data.data
       localStorage.setItem('aidcare_user', JSON.stringify(info.user));
-      localStorage.setItem('aidcare_token', info.user.token || "testtoken");
+      localStorage.setItem('aidcare_token', info.token);
       router.push(`/signup/success?orgId=${info.user.organization}&orgName=${info.organization.name}`);
     } catch (err) {
       alert(err.message);

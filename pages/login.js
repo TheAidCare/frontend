@@ -89,7 +89,7 @@ export default function Login() {
           type="submit" disabled={loading}
           className={styles.formSubmitButton}
         >
-          {loading ? "Creating..." : "Login"}
+          {loading ? "Logging In..." : "Login"}
         </button>
       </form>
 
@@ -97,35 +97,6 @@ export default function Login() {
         <p>Don't have an account?</p>
         <Link href="/signup">Sign Up</Link>
       </div>
-    </div>
-  );
-
-  return (
-    <div className="p-6 max-w-md mx-auto">
-      <h2 className="text-xl font-semibold mb-4">Enter your details</h2>
-      <input
-        className="border p-2 w-full mb-4"
-        placeholder="Your Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-
-      <select
-        className="border p-2 w-full mb-4"
-        value={role}
-        onChange={(e) => setRole(e.target.value)}
-      >
-        <option value="CHW">Community Health Worker</option>
-        <option value="Consultant">Consultant</option>
-      </select>
-
-      <button
-        className="bg-blue-600 text-white px-4 py-2 rounded"
-        onClick={handleLogin}
-        disabled={loading}
-      >
-        {loading ? 'Logging in...' : 'Enter'}
-      </button>
     </div>
   );
 }
