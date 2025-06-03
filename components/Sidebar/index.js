@@ -1,13 +1,15 @@
-import { IoSearch } from "react-icons/io5";
+import { IoLogOutOutline, IoSearch } from "react-icons/io5";
 import styles from "./Sidebar.module.css";
 import { useEffect, useState } from "react";
-import { getSavedUser } from "@/utils/auth";
+import { clearUser, getSavedUser } from "@/utils/auth";
 import { FaUserMd } from "react-icons/fa";
+import { useRouter } from "next/router";
 
 const Sidebar = ({isOpen, onClose}) => {
 
   const [patientQuery, setPatientQuery] = useState('');
   const [user, setUser] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     const savedUser = getSavedUser();
@@ -23,6 +25,11 @@ const Sidebar = ({isOpen, onClose}) => {
   const searchPatient = (e) => {
     e.preventDefault();
     console.log("Searching for patient:", patientQuery);
+  }
+
+  const logUserOut = () => {
+    clearUser();
+    router.push('/login');
   }
 
   let roles = {
@@ -73,7 +80,11 @@ const Sidebar = ({isOpen, onClose}) => {
             </div>
           </div>
 
-          <button className={styles.logOutBtn}>
+          <button
+            className={styles.logOutBtn}
+            onClick={logUserOut} aria-label="Click to log out of the application"
+          >
+            <IoLogOutOutline />
             Log out
           </button>
         </div>
