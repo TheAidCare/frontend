@@ -36,7 +36,6 @@
   display: flex;
   align-items: center;
   padding: 15px 6px;
-  padding-right: 0px;
   color: #6B728080;
   column-gap: 5px;
   width: 90%;
@@ -53,6 +52,7 @@
 }
 .searchInput {
   outline: none;
+  flex: 2 1;
 }
 
 .createNewPatientBtn {
@@ -62,6 +62,39 @@
   color: #FFFFFF;
   padding: 10px 0;
   border-radius: 7px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sidebarMain {
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+  width: 85%;
+  margin: 0 auto;
+  padding-top: 15px;
+}
+.patientListTitle {
+  color: #0F0F0F;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+.patientList {
+  display: flex;
+  flex-direction: column;
+  row-gap: 10px;
+  width: 100%;
+  max-height: calc(100vh - 300px);
+  overflow-y: auto;
+}
+.patientListItemButton {
+  padding: 10px 15px;
+  background-color: #F8F9FA;
+  border-radius: 7px;
+  color: #0F0F0F;
+  font-weight: 500;
   cursor: pointer;
 }
 
