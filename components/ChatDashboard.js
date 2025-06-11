@@ -31,7 +31,7 @@ const ChatDashboard = ({
   };
 
   const DefaultView = () => (
-    <div className="w-full max-w-md space-y-4 transition-all duration-300 ease-in-out">
+    <div className="w-9/10 max-w-md mx-auto space-y-4 transition-all duration-300 ease-in-out">
       <button 
         className="w-full p-4 bg-gray-50 rounded-xl text-left hover:bg-gray-100 transition-colors cursor-pointer"
         onClick={onAudioClick}
@@ -51,7 +51,7 @@ const ChatDashboard = ({
   );
 
   return (
-    <div className="flex flex-col h-screen bg-white">
+    <div className="">
       <button
         onClick={toggleSidebar}
         className={`${appStyles.sidebarBtn} ${openSidebar ? appStyles.activeSidebarBtn : ''} absolute top-4 left-4 z-50`}
@@ -65,13 +65,13 @@ const ChatDashboard = ({
         {...sidebarProps}
       />
 
-      <main className="flex-1 flex flex-col items-center px-4 pt-16 pb-20">
+      <main className="">
         {/* Logo Section */}
         <Logo />
 
         {/* Header Content (Patient Info) */}
         {headerContent && (
-          <div className="w-full max-w-md mb-8 mt-1 transition-all duration-300 ease-in-out transform translate-y-0 opacity-100">
+          <div className="w-95/100 max-w-md mb-8 mx-auto mt-1 transition-all duration-300 ease-in-out transform translate-y-0 opacity-100">
             {headerContent}
           </div>
         )}

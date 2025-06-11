@@ -124,14 +124,7 @@ export default function PatientDetailPage() {
   );
 
   return (
-    <div className="flex flex-col h-screen bg-white">
-      <button
-        onClick={toggleSidebar}
-        className={`${styles.sidebarBtn} ${openSidebar ? styles.activeSidebarBtn : ''} absolute top-4 left-4 z-50`}
-      >
-        <RxHamburgerMenu className={styles.sidebarIcon} />
-      </button>
-
+    <div className="bg-white">
       <ChatDashboard
         showDefaultView={!sessions || sessions.length === 0}
         onSendMessage={handleSendMessage}

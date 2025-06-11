@@ -6,6 +6,6 @@
   align-items: center;
   justify-content: center;
   column-gap: 8px;
-  margin-top: calc(20dvh - 20%);
+  margin-top: max(calc(20dvh - 5%), 50px);
   margin-bottom: 30px;
 }
