@@ -129,6 +129,8 @@ export default function PatientDetailPage() {
         showDefaultView={!sessions || sessions.length === 0}
         onSendMessage={handleSendMessage}
         headerContent={<PatientHeader />}
+        token={token}
+        patientId={user._id}
       >
         <SessionsView />
       </ChatDashboard>

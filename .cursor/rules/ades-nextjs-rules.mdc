@@ -4,35 +4,16 @@ globs:
 alwaysApply: false
 ---
 - All components should be functional components using hooks.
-- Use `className` for styling with Tailwind CSS.
+- Do not use Tailwind CSS for styling. All styling should be a CSS module. For components
 - All event handlers should be prefixed with `handle`. For example, `handleClick`.
 - Always use async/await for asynchronous operations.
 - Prefer arrow functions over function declarations.
 - By default, all clickable component (buttons, e.t.c) should have a `cursor: pointer` or a way to make it obvious that the component is clickable.
 
-### 1. Tailwind CSS for Utility and Layout
+CSS Modules for Component-Scoped Styles
 
-- **Primary Styling Method:** Use Tailwind CSS for all general layout, typography, spacing, and utility styling. It should be your default choice for styling elements.
-- **Classname Syntax:** Always apply Tailwind classes directly in the `className` prop of your JSX elements.
-- **No Custom CSS for Solvable Problems:** Do not write custom CSS for styles that can be achieved with standard Tailwind utilities (e.g., flexbox, grid, padding, margins, colors).
-- **Theme Configuration:** If you need to add custom colors, fonts, or spacing, modify the `tailwind.config.js` file first before writing custom CSS.
-- **Example of correct Tailwind CSS usage:**
-  ```jsx
-  <div className="flex items-center justify-between p-4 bg-gray-100 rounded-lg">
-    <h1 className="text-2xl font-bold text-gray-800">My Component</h1>
-    <button className="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700">Click Me</button>
-  </div>
-  ```
-
-### 2. CSS Modules for Component-Scoped Styles
-
-- **When to Use:** Use CSS Modules (`.module.css`) only for complex, component-specific styles that are difficult or messy to manage with utility classes. This is typically for:
-    - Custom animations or transitions.
-    - Complex pseudo-selectors (`:nth-child`, etc.).
-    - Styles that depend on a component's state or props and result in long, conditional `className` strings.
-    - When an element requires a very large number of utility classes that harms readability.
 - **File Naming:** Style files for a component should be named `[ComponentName].module.css` and be located in the same directory as the component file.
-  - For `src/components/Button/Button.jsx`, the style file should be `src/components/Button/Button.module.css`.
+  - For `src/components/Button/index.jsx`, the style file should be `src/components/Button/Button.module.css`.
 - **Importing:** Import CSS Modules using the `styles` object.
   ```jsx
   import styles from './MyComponent.module.css';
@@ -54,24 +35,7 @@ alwaysApply: false
   </div>
   ```
 
-### 3. Combining Tailwind CSS and CSS Modules
-
-- **Primary Approach:** When an element needs both utility and scoped styles, apply the Tailwind classes directly and the CSS Module class via the `styles` object. Use a template literal to combine them. The CSS Module class should ideally come first.
-- **Example:**
-  ```jsx
-  import styles from './Card.module.css';
-
-  function Card({ title }) {
-    return (
-      <div className={`${styles.card} p-4 bg-white rounded-lg shadow-md`}>
-        <h3 className="text-xl font-semibold text-gray-900">{title}</h3>
-      </div>
-    );
-  }
-  ```
-- **Avoid `@apply`:** Do not use the `@apply` directive within your CSS Module files to mix in Tailwind utilities. This can lead to CSS bloat and makes it harder to understand which styles are coming from where. Keep the concerns separate: Tailwind in JSX, custom styles in `.module.css`.
-
-### 4. General Component Structure
+### General Component Structure
 
 - **Component Files:** All new components should be created in the `components/` directory.
 

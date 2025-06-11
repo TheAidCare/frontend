@@ -1,10 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { RxHamburgerMenu } from 'react-icons/rx';
 import { IoSend } from 'react-icons/io5';
 import Sidebar from '@/components/Sidebar';
 import appStyles from "@/styles/app.module.css";
 import styles from "./ChatDashboard.module.css";
 import Logo from './Logo';
+import { io } from "socket.io-client";
+
 
 const ChatDashboard = ({ 
   children, // Main content area
@@ -15,16 +17,61 @@ const ChatDashboard = ({
   onAudioClick,
   onMediaClick,
   onInputFocus,
+  token, // Add token prop
+  patientId, // Add patientId prop
 }) => {
   const [openSidebar, setOpenSidebar] = useState(false);
   const [inputText, setInputText] = useState('');
+  const [socket, setSocket] = useState(null);
+
+  useEffect(() => {
+    // Initialize WebSocket connection
+    const webSocketBaseUrl = process.env.NEXT_PUBLIC_WEBSOCKET_URL;
+    if (!webSocketBaseUrl || !token || !patientId) {
+      console.error('Missing required WebSocket configuration');
+      return;
+    }
+
+
+    const socket = io("wss://aidcare-qrzkj.ondigitalocean.app", {
+      reconnectionDelayMax: 10000,
+      query: {
+        "token": token,
+        "patientId": patientId
+      }
+    });
+    socket.on("connect", () => {
+      console.log(socket.connected); // true
+    });
+
+    socket.on("message", (data) => {
+      console.log("Received message:", data);
+      // Handle incoming messages here
+      // You can update state or call a callback to notify parent component
+    })
+    socket.on("recentMessages", (data) => {
+      console.log("Received recent message:", data);
+      // Handle incoming messages here
+      // You can update state or call a callback to notify parent component
+    })
+    
+    socket.on("disconnect", () => {
+      console.log(socket.connected); // false
+    });
+  
+  }, [token, patientId]);
 
   const toggleSidebar = () => {
     setOpenSidebar(!openSidebar);
   };
 
   const handleSendMessage = () => {
-    if (inputText.trim()) {
+    if (inputText.trim() && socket && socket.readyState === WebSocket.OPEN) {
+      const messageData = {
+        message: inputText.trim()
+      };
+      
+      socket.send(JSON.stringify(messageData));
       onSendMessage?.(inputText.trim());
       setInputText('');
     }
