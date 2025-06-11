@@ -2,9 +2,10 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useAppContext } from '@/context/AppContext'; // Use context
-import Sidebar from '@/components/Sidebar';
+import ChatDashboard from '@/components/ChatDashboard';
 import styles from "@/styles/app.module.css"; //
 import { RxHamburgerMenu } from 'react-icons/rx';
+import { IoSend } from 'react-icons/io5';
 import Loader from '@/components/Loader'; //
 import NewPatientModal from '@/components/patients/NewPatientModal'; //
 
@@ -25,9 +26,11 @@ export default function PatientDetailPage() {
   const [openSidebar, setOpenSidebar] = useState(false);
   const [patientData, setPatientData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [inputText, setInputText] = useState('');
+  const [sessions, setSessions] = useState([]); // Will store patient's sessions
 
   useEffect(() => {
-    if (routePatientId && token) { // Use token from context
+    if (routePatientId && token) {
       const fetchPatientDetails = async () => {
         setLoading(true);
         try {
@@ -42,6 +45,10 @@ export default function PatientDetailPage() {
           }
           const data = await res.json();
           setPatientData(data.data || data);
+          
+          // TODO: Fetch patient sessions here
+          // For now, we'll just set an empty array
+          setSessions([]);
         } catch (error) {
           console.error("Error fetching patient details:", error);
           setPatientData(null);
@@ -63,10 +70,16 @@ export default function PatientDetailPage() {
   // This function will be passed to NewPatientModal
   const handlePatientCreatedAndNavigate = (newPatient) => {
     onPatientAdded(); // Call context's function
+    setOpenSidebar(false); // Close the sidebar
     // Navigate to the newly created patient's page, or stay if already on a patient page
     if (newPatient && (newPatient._id || newPatient.id)) {
       router.push(`/app/patient/${newPatient._id || newPatient.id}`);
     }
+  };
+
+  const handleSendMessage = (message) => {
+    // Handle sending message here
+    console.log('Message sent for patient:', routePatientId, message);
   };
 
   if (!user || loading ) { // Check for user from context
@@ -88,42 +101,73 @@ export default function PatientDetailPage() {
     )
   }
 
+  // Patient info header component
+  const PatientHeader = () => (
+    <div className="bg-gray-50 rounded-xl p-4 w-full">
+      <div className="flex items-center justify-between mb-2">
+        <h2 className="text-xl font-semibold text-gray-800">
+          {patientData.firstName} {patientData.lastName}
+        </h2>
+        <span className="px-3 py-1 bg-[#6366F1] text-white text-sm rounded-full">
+          {patientData.gender}
+        </span>
+      </div>
+      <div className="flex items-center text-sm text-gray-600">
+        <span>DOB: {new Date(patientData.dateOfBirth).toLocaleDateString()}</span>
+      </div>
+    </div>
+  );
+
+  // Custom content for when there are sessions
+  const SessionsView = () => (
+    <div className="w-full max-w-3xl">
+      {/* Session history will go here */}
+      <p>Sessions view coming soon...</p>
+    </div>
+  );
 
   return (
-    <>
+    <div className="flex flex-col h-screen bg-white">
       <button
         onClick={toggleSidebar}
-        className={`${styles.sidebarBtn} ${openSidebar ? styles.activeSidebarBtn : ''}`} //
+        className={`${styles.sidebarBtn} ${openSidebar ? styles.activeSidebarBtn : ''} absolute top-4 left-4 z-50`}
       >
         <RxHamburgerMenu className={styles.sidebarIcon} />
       </button>
-      <Sidebar 
-        isOpen={openSidebar} 
-        onClose={() => setOpenSidebar(false)}
-      />
-      <div className='flex flex-col justify-center items-center h-screen p-4'>
-        <h1 className="text-2xl font-bold mb-4">Patient Details</h1>
-        {patientData ? (
-          <div>
-            <p><strong>ID:</strong> {patientData._id || patientData.id}</p>
-            <p><strong>Name:</strong> {patientData.firstName} {patientData.lastName}</p>
-            <p><strong>Date of Birth:</strong> {new Date(patientData.dateOfBirth).toLocaleDateString()}</p>
-            <p><strong>Gender:</strong> {patientData.gender}</p>
-          </div>
-        ) : (
-          // This part might be covered by the loading state or the !patientData && !loading check above
-          <p>Loading patient data or data not available...</p>
-        )}
-        <button onClick={() => router.push('/app')} className="mt-4 p-2 bg-blue-500 text-white rounded">
-          Back to Dashboard
-        </button>
+
+      <ChatDashboard
+        showDefaultView={!sessions || sessions.length === 0}
+        onSendMessage={handleSendMessage}
+        headerContent={<PatientHeader />}
+      >
+        <SessionsView />
+      </ChatDashboard>
+
+      {/* Bottom Input Area */}
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t">
+        <div className="max-w-md mx-auto flex gap-2">
+          <input
+            type="text"
+            value={inputText}
+            onChange={(e) => setInputText(e.target.value)}
+            placeholder="Enter notes or symptoms manually."
+            className="flex-1 p-3 rounded-lg border border-gray-200 focus:outline-none focus:border-[#6366F1]"
+          />
+          <button
+            onClick={() => handleSendMessage(inputText)}
+            className="p-3 text-[#6366F1] hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
+          >
+            <IoSend size={24} />
+          </button>
+        </div>
       </div>
+
       {/* NewPatientModal is available globally via context, AppHome/this page controls its props */}
       <NewPatientModal
         isOpen={isNewPatientModalOpen} // from context
         onClose={closeNewPatientModal} // from context
         onPatientCreated={handlePatientCreatedAndNavigate} // This uses onPatientAdded from context
       />
-    </>
+    </div>
   );
 }

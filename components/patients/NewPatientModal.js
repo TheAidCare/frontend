@@ -94,7 +94,7 @@ export default function NewPatientModal({ isOpen, onClose, onPatientCreated }) {
             placeholder="First Name"
             value={form.firstName}
             onChange={handleChange}
-            required
+            required autoComplete="off"
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <input
@@ -103,7 +103,7 @@ export default function NewPatientModal({ isOpen, onClose, onPatientCreated }) {
             placeholder="Last Name"
             value={form.lastName}
             onChange={handleChange}
-            required
+            required autoComplete="off"
             className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           
