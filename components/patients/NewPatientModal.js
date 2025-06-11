@@ -87,7 +87,7 @@ export default function NewPatientModal({ isOpen, onClose, onPatientCreated }) {
         onClick={(e) => e.stopPropagation()}
       >
         <h2 className="text-2xl font-semibold pb-6 text-gray-800">New Patient</h2>
-        <form onSubmit={handleSubmit} className="space-y-4 flex flex-col gap-3">
+        <form onSubmit={handleSubmit} className="space-y-4 flex flex-col gap-4">
           <input
             name="firstName"
             type="text"
@@ -95,7 +95,7 @@ export default function NewPatientModal({ isOpen, onClose, onPatientCreated }) {
             value={form.firstName}
             onChange={handleChange}
             required autoComplete="off"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 m-0"
           />
           <input
             name="lastName"
@@ -104,7 +104,7 @@ export default function NewPatientModal({ isOpen, onClose, onPatientCreated }) {
             value={form.lastName}
             onChange={handleChange}
             required autoComplete="off"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 m-0"
           />
           
           <input
@@ -114,14 +114,14 @@ export default function NewPatientModal({ isOpen, onClose, onPatientCreated }) {
             value={form.dateOfBirth}
             onChange={handleChange}
             required
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 m-0"
           />
 
           <select
             name="gender"
             value={form.gender}
             onChange={handleChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 m-0"
           >
             <option value="male">Male</option>
             <option value="female">Female</option>

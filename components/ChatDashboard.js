@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { RxHamburgerMenu } from 'react-icons/rx';
 import { IoSend } from 'react-icons/io5';
 import Sidebar from '@/components/Sidebar';
-import styles from "@/styles/app.module.css";
-import Link from 'next/link';
+import appStyles from "@/styles/app.module.css";
+import styles from "./ChatDashboard.module.css";
+import Logo from './Logo';
 
 const ChatDashboard = ({ 
   children, // Main content area
@@ -53,9 +54,9 @@ const ChatDashboard = ({
     <div className="flex flex-col h-screen bg-white">
       <button
         onClick={toggleSidebar}
-        className={`${styles.sidebarBtn} ${openSidebar ? styles.activeSidebarBtn : ''} absolute top-4 left-4 z-50`}
+        className={`${appStyles.sidebarBtn} ${openSidebar ? appStyles.activeSidebarBtn : ''} absolute top-4 left-4 z-50`}
       >
-        <RxHamburgerMenu className={styles.sidebarIcon} />
+        <RxHamburgerMenu className={appStyles.sidebarIcon} />
       </button>
 
       <Sidebar 
@@ -64,22 +65,13 @@ const ChatDashboard = ({
         {...sidebarProps}
       />
 
-      <main className="flex-1 flex flex-col items-center px-4 pt-16 pb-20 overflow-hidden">
+      <main className="flex-1 flex flex-col items-center px-4 pt-16 pb-20">
         {/* Logo Section */}
-        <div className="mb-6 mt-8">
-          <Link href="/app" className="block transition-transform hover:scale-105">
-            <h1 className="text-4xl font-bold text-[#6366F1]">
-              <span className="flex items-center">
-                <span className="text-[#6366F1] mr-2">•</span>
-                AidCare
-              </span>
-            </h1>
-          </Link>
-        </div>
+        <Logo />
 
         {/* Header Content (Patient Info) */}
         {headerContent && (
-          <div className="w-full max-w-md mb-8 transition-all duration-300 ease-in-out transform translate-y-0 opacity-100">
+          <div className="w-full max-w-md mb-8 mt-1 transition-all duration-300 ease-in-out transform translate-y-0 opacity-100">
             {headerContent}
           </div>
         )}
@@ -95,7 +87,7 @@ const ChatDashboard = ({
       </main>
 
       {/* Bottom Input Area */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t">
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white">
         <div className="max-w-md mx-auto flex gap-2">
           <input
             type="text"

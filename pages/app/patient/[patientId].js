@@ -105,15 +105,12 @@ export default function PatientDetailPage() {
   const PatientHeader = () => (
     <div className="bg-gray-50 rounded-xl p-4 w-full">
       <div className="flex items-center justify-between mb-2">
-        <h2 className="text-xl font-semibold text-gray-800">
+        <span className="text-xl font-semibold text-gray-800">
           {patientData.firstName} {patientData.lastName}
-        </h2>
+        </span>
         <span className="px-3 py-1 bg-[#6366F1] text-white text-sm rounded-full">
           {patientData.gender}
         </span>
-      </div>
-      <div className="flex items-center text-sm text-gray-600">
-        <span>DOB: {new Date(patientData.dateOfBirth).toLocaleDateString()}</span>
       </div>
     </div>
   );
@@ -144,7 +141,7 @@ export default function PatientDetailPage() {
       </ChatDashboard>
 
       {/* Bottom Input Area */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t">
+      {/* <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t">
         <div className="max-w-md mx-auto flex gap-2">
           <input
             type="text"
@@ -160,7 +157,7 @@ export default function PatientDetailPage() {
             <IoSend size={24} />
           </button>
         </div>
-      </div>
+      </div> */}
 
       {/* NewPatientModal is available globally via context, AppHome/this page controls its props */}
       <NewPatientModal

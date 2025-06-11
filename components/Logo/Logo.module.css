@@ -1,0 +1,11 @@
+.logoContainer {
+  width: 80%;
+  margin: 0 auto;
+  max-width: 350px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  column-gap: 8px;
+  margin-top: calc(20dvh - 20%);
+  margin-bottom: 30px;
+}
