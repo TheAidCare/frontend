@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { RxHamburgerMenu } from 'react-icons/rx';
 import { IoSend } from 'react-icons/io5';
 import { IoChevronDown } from 'react-icons/io5';
+import { IoAttach } from 'react-icons/io5';
 import Sidebar from '@/components/Sidebar';
 import appStyles from "@/styles/app.module.css";
 import styles from "./ChatDashboard.module.css";
@@ -31,10 +32,21 @@ const ChatDashboard = ({
   const [currentInference, setCurrentInference] = useState(null);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
-
+  
   useEffect(() => {
     if (!token || !patientId) {
       return;
+    }
+    if (patientData.consultations.length < 1) {
+      console.log("No consultations found");
+      setShowDefaultView(true);
+    } else {
+      let pastMessages = patientData.consultations.map(consultation => {
+        let lastChat = consultation.chats[consultation.chats.length - 1];
+        return lastChat;
+      })
+      setMessages(pastMessages);
+      setShowDefaultView(false);
     }
 
     const socket = io("wss://aidcare-qrzkj.ondigitalocean.app", {
@@ -65,13 +77,13 @@ const ChatDashboard = ({
       }
     });
 
-    socket.on("recentMessages", (data) => {
-      console.log("Received recent messages:", data);
-      // Add the response to history if it contains content
-      if (data.content) {
-        setMessages(prev => [...prev, { type: 'received', content: data.content }]);
-      }
-    });
+    // socket.on("recentMessages", (data) => {
+    //   console.log("Received recent messages:", data);
+    //   // Add the response to history if it contains content
+    //   if (data.content) {
+    //     setMessages(prev => [...prev, { type: 'received', content: data.content }]);
+    //   }
+    // });
     
     socket.on("disconnect", () => {
       console.log("WebSocket disconnected for patient:", patientId);
@@ -232,6 +244,15 @@ const ChatDashboard = ({
             placeholder="Enter notes or symptoms manually."
             className="flex-1 p-3 rounded-lg border border-gray-200 focus:outline-none focus:border-[#6366F1]"
           />
+          {!showDefaultView && (
+            <button
+              onClick={onMediaClick}
+              className="p-3 text-[#6366F1] hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
+              title="Upload files"
+            >
+              <IoAttach size={24} />
+            </button>
+          )}
           <button
             onClick={handleSendMessage}
             className="p-3 text-[#6366F1] hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
