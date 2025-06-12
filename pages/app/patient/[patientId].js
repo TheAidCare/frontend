@@ -26,8 +26,7 @@ export default function PatientDetailPage() {
   const [openSidebar, setOpenSidebar] = useState(false);
   const [patientData, setPatientData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [inputText, setInputText] = useState('');
-  const [sessions, setSessions] = useState([]); // Will store patient's sessions
+  const [showDefaultView, setShowDefaultView] = useState(true);
 
   useEffect(() => {
     if (routePatientId && token) {
@@ -45,10 +44,6 @@ export default function PatientDetailPage() {
           }
           const data = await res.json();
           setPatientData(data.data || data);
-          
-          // TODO: Fetch patient sessions here
-          // For now, we'll just set an empty array
-          setSessions([]);
         } catch (error) {
           console.error("Error fetching patient details:", error);
           setPatientData(null);
@@ -77,10 +72,6 @@ export default function PatientDetailPage() {
     }
   };
 
-  const handleSendMessage = (message) => {
-    // Handle sending message here
-    console.log('Message sent for patient:', routePatientId, message);
-  };
 
   if (!user || loading ) { // Check for user from context
     return (
@@ -101,58 +92,17 @@ export default function PatientDetailPage() {
     )
   }
 
-  // Patient info header component
-  const PatientHeader = () => (
-    <div className="bg-gray-50 rounded-xl p-4 w-full">
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-xl font-semibold text-gray-800">
-          {patientData.firstName} {patientData.lastName}
-        </span>
-        <span className="px-3 py-1 bg-[#6366F1] text-white text-sm rounded-full">
-          {patientData.gender}
-        </span>
-      </div>
-    </div>
-  );
-
-  // Custom content for when there are sessions
-  const SessionsView = () => (
-    <div className="w-full max-w-3xl">
-      {/* Session history will go here */}
-      <p>Sessions view coming soon...</p>
-    </div>
-  );
-
   return (
     <div className="bg-white">
       <ChatDashboard
-        showDefaultView={!sessions || sessions.length === 0}
-        onSendMessage={handleSendMessage}
-        headerContent={<PatientHeader />}
+        showDefaultView={showDefaultView}
+        setShowDefaultView={setShowDefaultView}
         token={token}
-        patientId={user._id}
+        patientId={routePatientId}
       >
-        <SessionsView />
+        {/* <SessionsView /> */}
       </ChatDashboard>
 
-      {/* Bottom Input Area */}
-      {/* <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t">
-        <div className="max-w-md mx-auto flex gap-2">
-          <input
-            type="text"
-            value={inputText}
-            onChange={(e) => setInputText(e.target.value)}
-            placeholder="Enter notes or symptoms manually."
-            className="flex-1 p-3 rounded-lg border border-gray-200 focus:outline-none focus:border-[#6366F1]"
-          />
-          <button
-            onClick={() => handleSendMessage(inputText)}
-            className="p-3 text-[#6366F1] hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
-          >
-            <IoSend size={24} />
-          </button>
-        </div>
-      </div> */}
 
       {/* NewPatientModal is available globally via context, AppHome/this page controls its props */}
       <NewPatientModal

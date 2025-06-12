@@ -6,32 +6,30 @@ import appStyles from "@/styles/app.module.css";
 import styles from "./ChatDashboard.module.css";
 import Logo from './Logo';
 import { io } from "socket.io-client";
-
+import AudioRecorder from './AudioRecorder';
 
 const ChatDashboard = ({ 
-  children, // Main content area
-  showDefaultView = true, // Whether to show default buttons or custom content
-  onSendMessage, // Callback for when a message is sent
-  sidebarProps = {}, // Props to pass to Sidebar component
-  headerContent = null, // Optional header content to show below logo
+  children,
+  showDefaultView,
+  setShowDefaultView,
+  sidebarProps = {},
   onAudioClick,
   onMediaClick,
   onInputFocus,
-  token, // Add token prop
-  patientId, // Add patientId prop
+  token,
+  patientId,
 }) => {
   const [openSidebar, setOpenSidebar] = useState(false);
   const [inputText, setInputText] = useState('');
   const [socket, setSocket] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [activeTab, setActiveTab] = useState('suggestions'); // or 'summary'
+  const [currentInference, setCurrentInference] = useState(null);
 
   useEffect(() => {
-    // Initialize WebSocket connection
-    const webSocketBaseUrl = process.env.NEXT_PUBLIC_WEBSOCKET_URL;
-    if (!webSocketBaseUrl || !token || !patientId) {
-      console.error('Missing required WebSocket configuration');
+    if (!token || !patientId) {
       return;
     }
-
 
     const socket = io("wss://aidcare-qrzkj.ondigitalocean.app", {
       reconnectionDelayMax: 10000,
@@ -40,65 +38,74 @@ const ChatDashboard = ({
         "patientId": patientId
       }
     });
+
     socket.on("connect", () => {
-      console.log(socket.connected); // true
+      console.log("WebSocket connected for patient:", patientId);
+      setSocket(socket);
     });
 
     socket.on("message", (data) => {
       console.log("Received message:", data);
-      // Handle incoming messages here
-      // You can update state or call a callback to notify parent component
-    })
+      if (data.sender === 'system' && data.triageData) {
+        setShowDefaultView(false);
+        setCurrentInference(data.triageData);
+        // Add system message to history
+        setMessages(prev => [...prev, { 
+          type: 'received', 
+          content: data.triageData.triage_recommendation.summary_of_findings 
+        }]);
+      } else if (data.sender === 'user') {
+        // This is the echo of our sent message, we don't need to add it again
+        console.log("Received echo of sent message");
+      }
+    });
+
     socket.on("recentMessages", (data) => {
-      console.log("Received recent message:", data);
-      // Handle incoming messages here
-      // You can update state or call a callback to notify parent component
-    })
+      console.log("Received recent messages:", data);
+      // Add the response to history if it contains content
+      if (data.content) {
+        setMessages(prev => [...prev, { type: 'received', content: data.content }]);
+      }
+    });
     
     socket.on("disconnect", () => {
-      console.log(socket.connected); // false
+      console.log("WebSocket disconnected for patient:", patientId);
+      setSocket(null);
     });
-  
-  }, [token, patientId]);
+
+    return () => {
+      if (socket) {
+        console.log("Cleaning up WebSocket connection for patient:", patientId);
+        socket.disconnect();
+        setSocket(null);
+      }
+    };
+  }, [token, patientId, setShowDefaultView]);
 
   const toggleSidebar = () => {
     setOpenSidebar(!openSidebar);
   };
 
   const handleSendMessage = () => {
-    if (inputText.trim() && socket && socket.readyState === WebSocket.OPEN) {
+    if (inputText.trim() && socket) {
       const messageData = {
         message: inputText.trim()
       };
       
-      socket.send(JSON.stringify(messageData));
-      onSendMessage?.(inputText.trim());
+      // Add the sent message to history immediately
+      setMessages(prev => [...prev, { 
+        type: 'sent', 
+        content: messageData.message 
+      }]);
+      
+      // Send the message through socket
+      socket.emit("message", messageData);
       setInputText('');
     }
   };
 
-  const DefaultView = () => (
-    <div className="w-9/10 max-w-md mx-auto space-y-4 transition-all duration-300 ease-in-out">
-      <button 
-        className="w-full p-4 bg-gray-50 rounded-xl text-left hover:bg-gray-100 transition-colors cursor-pointer"
-        onClick={onAudioClick}
-      >
-        <h3 className="font-medium mb-1">Use audio</h3>
-        <p className="text-sm text-gray-600">Let us listen and extract key points</p>
-      </button>
-
-      <button 
-        className="w-full p-4 bg-gray-50 rounded-xl text-left hover:bg-gray-100 transition-colors cursor-pointer"
-        onClick={onMediaClick}
-      >
-        <h3 className="font-medium mb-1">Upload media</h3>
-        <p className="text-sm text-gray-600">Add files, images of lab results, etc</p>
-      </button>
-    </div>
-  );
-
   return (
-    <div className="">
+    <div className="min-h-screen bg-white">
       <button
         onClick={toggleSidebar}
         className={`${appStyles.sidebarBtn} ${openSidebar ? appStyles.activeSidebarBtn : ''} absolute top-4 left-4 z-50`}
@@ -112,29 +119,91 @@ const ChatDashboard = ({
         {...sidebarProps}
       />
 
-      <main className="">
-        {/* Logo Section */}
-        <Logo />
+      <main className="pt-4">
+        {/* Logo Section - Compact when on patient page */}
+        <Logo compact={!showDefaultView} />
 
-        {/* Header Content (Patient Info) */}
-        {headerContent && (
-          <div className="w-95/100 max-w-md mb-8 mx-auto mt-1 transition-all duration-300 ease-in-out transform translate-y-0 opacity-100">
-            {headerContent}
+        {/* Audio Recorder */}
+        {!showDefaultView && (
+          <AudioRecorder onToggle={onAudioClick} />
+        )}
+
+        {/* Messages History - Scrollable section */}
+        {!showDefaultView && messages.length > 0 && (
+          <div className="max-w-md mx-auto mb-6 px-4 h-32 overflow-y-auto">
+            {messages.map((msg, idx) => (
+              <div 
+                key={idx}
+                className={`mb-2 p-2 rounded ${
+                  msg.type === 'sent' 
+                    ? 'bg-gray-50 text-gray-700' 
+                    : 'bg-[#6366F1] bg-opacity-5 text-gray-800'
+                }`}
+              >
+                {msg.content}
+              </div>
+            ))}
           </div>
         )}
 
-        {/* Main Content */}
-        <div className={`w-full transition-all duration-300 ease-in-out transform ${showDefaultView ? 'translate-y-0 opacity-100' : '-translate-y-4 opacity-0'}`}>
-          {showDefaultView && <DefaultView />}
-        </div>
-        
-        <div className={`w-full transition-all duration-300 ease-in-out transform ${!showDefaultView ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'}`}>
-          {!showDefaultView && children}
+        {/* Inference Section with Tabs */}
+        {!showDefaultView && currentInference && (
+          <div className="max-w-md mx-auto px-4">
+            {/* Tab Buttons */}
+            <div className="flex rounded-full bg-gray-100 p-1 mb-4">
+              <button
+                onClick={() => setActiveTab('suggestions')}
+                className={`flex-1 py-2 rounded-full text-sm font-medium transition-all ${
+                  activeTab === 'suggestions'
+                    ? 'bg-white text-[#6366F1] shadow'
+                    : 'text-gray-500'
+                }`}
+              >
+                Suggestions
+              </button>
+              <button
+                onClick={() => setActiveTab('summary')}
+                className={`flex-1 py-2 rounded-full text-sm font-medium transition-all ${
+                  activeTab === 'summary'
+                    ? 'bg-white text-[#6366F1] shadow'
+                    : 'text-gray-500'
+                }`}
+              >
+                Summary
+              </button>
+            </div>
+
+            {/* Tab Content */}
+            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+              {activeTab === 'suggestions' ? (
+                <div>
+                  <h3 className="font-medium mb-3">Questions to Ask</h3>
+                  {currentInference.triage_recommendation.recommended_actions_for_chw.map((action, idx) => (
+                    <p key={idx} className="mb-2 text-gray-700">{action}</p>
+                  ))}
+                </div>
+              ) : (
+                <div>
+                  <h3 className="font-medium mb-3">Key Points</h3>
+                  <p className="text-gray-700">{currentInference.triage_recommendation.summary_of_findings}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Default View or Children */}
+        <div className="mt-8">
+          {showDefaultView ? (
+            <DefaultView onAudioClick={onAudioClick} onMediaClick={onMediaClick} />
+          ) : (
+            children
+          )}
         </div>
       </main>
 
       {/* Bottom Input Area */}
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white">
+      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t">
         <div className="max-w-md mx-auto flex gap-2">
           <input
             type="text"
@@ -155,5 +224,26 @@ const ChatDashboard = ({
     </div>
   );
 };
+
+// DefaultView component remains unchanged
+const DefaultView = ({ onAudioClick, onMediaClick }) => (
+  <div className="w-9/10 max-w-md mx-auto space-y-4">
+    <button 
+      className="w-full p-4 bg-gray-50 rounded-xl text-left hover:bg-gray-100 transition-colors cursor-pointer"
+      onClick={onAudioClick}
+    >
+      <h3 className="font-medium mb-1">Use audio</h3>
+      <p className="text-sm text-gray-600">Let us listen and extract key points</p>
+    </button>
+
+    <button 
+      className="w-full p-4 bg-gray-50 rounded-xl text-left hover:bg-gray-100 transition-colors cursor-pointer"
+      onClick={onMediaClick}
+    >
+      <h3 className="font-medium mb-1">Upload media</h3>
+      <p className="text-sm text-gray-600">Add files, images of lab results, etc</p>
+    </button>
+  </div>
+);
 
 export default ChatDashboard; 
