@@ -1,12 +1,15 @@
 import { useState, useEffect } from 'react';
 import { RxHamburgerMenu } from 'react-icons/rx';
 import { IoSend } from 'react-icons/io5';
+import { IoChevronDown } from 'react-icons/io5';
 import Sidebar from '@/components/Sidebar';
 import appStyles from "@/styles/app.module.css";
 import styles from "./ChatDashboard.module.css";
-import Logo from './Logo';
+import Logo from '../Logo';
 import { io } from "socket.io-client";
-import AudioRecorder from './AudioRecorder';
+import AudioRecorder from '../AudioRecorder';
+import PatientHeader from '../PatientHeader';
+import LoadingToast from '../LoadingToast';
 
 const ChatDashboard = ({ 
   children,
@@ -18,6 +21,7 @@ const ChatDashboard = ({
   onInputFocus,
   token,
   patientId,
+  patientData,
 }) => {
   const [openSidebar, setOpenSidebar] = useState(false);
   const [inputText, setInputText] = useState('');
@@ -25,6 +29,8 @@ const ChatDashboard = ({
   const [messages, setMessages] = useState([]);
   const [activeTab, setActiveTab] = useState('suggestions'); // or 'summary'
   const [currentInference, setCurrentInference] = useState(null);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
     if (!token || !patientId) {
@@ -49,14 +55,13 @@ const ChatDashboard = ({
       if (data.sender === 'system' && data.triageData) {
         setShowDefaultView(false);
         setCurrentInference(data.triageData);
-        // Add system message to history
+        setIsProcessing(false); // Stop loading when system responds
+      } else if (data.sender === 'user') {
+        // Add user message to history
         setMessages(prev => [...prev, { 
           type: 'received', 
-          content: data.triageData.triage_recommendation.summary_of_findings 
+          content: data.content
         }]);
-      } else if (data.sender === 'user') {
-        // This is the echo of our sent message, we don't need to add it again
-        console.log("Received echo of sent message");
       }
     });
 
@@ -92,11 +97,8 @@ const ChatDashboard = ({
         message: inputText.trim()
       };
       
-      // Add the sent message to history immediately
-      setMessages(prev => [...prev, { 
-        type: 'sent', 
-        content: messageData.message 
-      }]);
+      // Start loading indicator
+      setIsProcessing(true);
       
       // Send the message through socket
       socket.emit("message", messageData);
@@ -106,6 +108,8 @@ const ChatDashboard = ({
 
   return (
     <div className="min-h-screen bg-white">
+      <LoadingToast isVisible={isProcessing} />
+      
       <button
         onClick={toggleSidebar}
         className={`${appStyles.sidebarBtn} ${openSidebar ? appStyles.activeSidebarBtn : ''} absolute top-4 left-4 z-50`}
@@ -119,30 +123,45 @@ const ChatDashboard = ({
         {...sidebarProps}
       />
 
-      <main className="pt-4">
+      <main className={styles.mainContent}>
         {/* Logo Section - Compact when on patient page */}
         <Logo compact={!showDefaultView} />
+
+        {/* Patient Header */}
+        {patientData && (
+          <PatientHeader patient={patientData} />
+        )}
 
         {/* Audio Recorder */}
         {!showDefaultView && (
           <AudioRecorder onToggle={onAudioClick} />
         )}
 
-        {/* Messages History - Scrollable section */}
+        {/* Collapsible Messages History */}
         {!showDefaultView && messages.length > 0 && (
-          <div className="max-w-md mx-auto mb-6 px-4 h-32 overflow-y-auto">
-            {messages.map((msg, idx) => (
-              <div 
-                key={idx}
-                className={`mb-2 p-2 rounded ${
-                  msg.type === 'sent' 
-                    ? 'bg-gray-50 text-gray-700' 
-                    : 'bg-[#6366F1] bg-opacity-5 text-gray-800'
-                }`}
-              >
-                {msg.content}
+          <div className="max-w-md mx-auto px-4">
+            <div 
+              className={styles.collapsibleHeader}
+              onClick={() => setIsHistoryOpen(!isHistoryOpen)}
+            >
+              <span className="font-medium">Context History</span>
+              <IoChevronDown 
+                className={`${styles.chevronIcon} ${isHistoryOpen ? styles.open : ''}`}
+                size={20}
+              />
+            </div>
+            <div className={`${styles.collapsibleContent} ${isHistoryOpen ? styles.open : ''}`}>
+              <div className="px-4">
+                {messages.map((msg, idx) => (
+                  <div 
+                    key={idx}
+                    className={`mb-2 p-2 rounded bg-gray-50 text-gray-700`}
+                  >
+                    {msg.content}
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
         )}
 

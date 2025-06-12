@@ -9,7 +9,6 @@ import { IoSend } from 'react-icons/io5';
 import Loader from '@/components/Loader'; //
 import NewPatientModal from '@/components/patients/NewPatientModal'; //
 
-
 export default function PatientDetailPage() {
   const router = useRouter();
   const { patientId: routePatientId } = router.query; // Renamed to avoid conflict
@@ -99,16 +98,16 @@ export default function PatientDetailPage() {
         setShowDefaultView={setShowDefaultView}
         token={token}
         patientId={routePatientId}
+        patientData={patientData}
       >
         {/* <SessionsView /> */}
       </ChatDashboard>
 
-
-      {/* NewPatientModal is available globally via context, AppHome/this page controls its props */}
+      {/* NewPatientModal is available globally via context */}
       <NewPatientModal
-        isOpen={isNewPatientModalOpen} // from context
-        onClose={closeNewPatientModal} // from context
-        onPatientCreated={handlePatientCreatedAndNavigate} // This uses onPatientAdded from context
+        isOpen={isNewPatientModalOpen}
+        onClose={closeNewPatientModal}
+        onPatientCreated={handlePatientCreatedAndNavigate}
       />
     </div>
   );

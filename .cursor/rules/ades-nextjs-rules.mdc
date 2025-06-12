@@ -4,7 +4,7 @@ globs:
 alwaysApply: false
 ---
 - All components should be functional components using hooks.
-- Do not use Tailwind CSS for styling. All styling should be a CSS module. For components
+- Do not use Tailwind CSS for styling. All styling should be in CSS module files. For components, a folder should be created with the folder name being the component name ("Loader"), the folder should contain an `index.js` which is the main file of the component, and a `[ComponentName].module.css` file
 - All event handlers should be prefixed with `handle`. For example, `handleClick`.
 - Always use async/await for asynchronous operations.
 - Prefer arrow functions over function declarations.
@@ -39,4 +39,4 @@ CSS Modules for Component-Scoped Styles
 
 - **Component Files:** All new components should be created in the `components/` directory.
 
-- **File Structure:** A component folder should contain the component file (`ComponentName.jsx`) and its corresponding style file (`ComponentName.module.css`) if needed.
+- **File Structure:** A component folder named after the `ComponentName` should contain the component file (`index.jsx`) and its corresponding style file (`ComponentName.module.css`) if needed.
