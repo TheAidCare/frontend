@@ -1,93 +1,161 @@
-// Example of a sent message to the websocket
 
+// Request API
+{NEXT_PUBLIC_API_URL}/api/v1/patients/{patientID}/consultation/{consultationID}
+
+// Example of a response from the server
 {
-  "message": "Patient Info:  Name: Mama Ijeoma Age: Estimated 68 Sex: Female Location: Ekwulobia, Anambra Marital Status: Widow Occupation: Retired trader Medical History: Known hypertensive, on medication irregularly (uses herbal mixtures in between) Family History: Sister died of stroke at 60 Social History: Lives alone, supported by children who live in the city Housing: Lives in a bungalow, uses well water and firewood for cooking Diet: Mostly yam, garri, okro soup. Rarely eats meat or fruits  Presenting Complaints:  Gradual worsening of pain in both knees over the past 6 months, now affecting ability to walk long distances. Complains of morning stiffness in joints that eases slightly after movement. Occasional swelling of ankles, especially in the evenings. Recently started feeling slight numbness in fingers. Reports one episode of dizziness last week while trying to stand up from bed. Sometimes forgets to take her BP medication, especially when she “feels okay.” No chest pain or palpitations. Reports difficulty sleeping due to pain at night. No fall or trauma, but uses a walking stick to support herself now."
-}
-
-
-// Example of first received message from the websocket on that sent message
-
-{
-  "content": "Patient Info:  Name: Mama Ijeoma Age: Estimated 68 Sex: Female Location: Ekwulobia, Anambra Marital Status: Widow Occupation: Retired trader Medical History: Known hypertensive, on medication irregularly (uses herbal mixtures in between) Family History: Sister died of stroke at 60 Social History: Lives alone, supported by children who live in the city Housing: Lives in a bungalow, uses well water and firewood for cooking Diet: Mostly yam, garri, okro soup. Rarely eats meat or fruits  Presenting Complaints:  Gradual worsening of pain in both knees over the past 6 months, now affecting ability to walk long distances. Complains of morning stiffness in joints that eases slightly after movement. Occasional swelling of ankles, especially in the evenings. Recently started feeling slight numbness in fingers. Reports one episode of dizziness last week while trying to stand up from bed. Sometimes forgets to take her BP medication, especially when she “feels okay.” No chest pain or palpitations. Reports difficulty sleeping due to pain at night. No fall or trauma, but uses a walking stick to support herself now.",
-  "sender": "user",
-  "consultationId": "684a196fce76826035a86779",
-  "triageData": {
-      "triage_recommendation": {
-          "recommended_actions_for_chw": [],
-          "key_guideline_references": [],
-          "important_notes_for_chw": []
+  "success": true,
+  "message": "Patient and consultation data retrieved successfully",
+  "data": {
+      "patient": {
+          "_id": "68506e11029889c478f0cbdb",
+          "firstName": "Ridwan",
+          "lastName": "Adeyemo",
+          "dateOfBirth": "1990-05-15T00:00:00.000Z",
+          "gender": "male",
+          "organization": "683abdf7afd3eef0a3062a8f",
+          "isActive": true,
+          "fullName": "Ridwan Adeyemo",
+          "age": 35
       },
-      "extracted_symptoms": [],
-      "retrieved_guidelines_summary": []
-  },
-  "_id": "684a19a7ce76826035a86781",
-  "timestamp": "2025-06-12T00:04:55.541Z",
-  "createdAt": "2025-06-12T00:04:55.541Z",
-  "updatedAt": "2025-06-12T00:04:55.541Z",
-  "__v": 0
-}
-
-// Example of second & main received message from the websocket on that sent message
-
-{
-  "content": "The patient presents with gradual worsening bilateral knee pain, affecting mobility, morning stiffness, ankle swelling, and occasional dizziness.  Guideline Entry 1 (Musculo-Skeletal System Disorders) and Guideline Entry 2 (Pain or swelling in limbs) are most relevant, suggesting potential osteoarthritis, age-related degeneration, or arthritis.  The dizziness warrants further investigation.",
-  "sender": "system",
-  "consultationId": "684a196fce76826035a86779",
-  "triageData": {
-      "mode": "chw_triage_text_input",
-      "input_transcript": "Patient Info:  Name: Mama Ijeoma Age: Estimated 68 Sex: Female Location: Ekwulobia, Anambra Marital Status: Widow Occupation: Retired trader Medical History: Known hypertensive, on medication irregularly (uses herbal mixtures in between) Family History: Sister died of stroke at 60 Social History: Lives alone, supported by children who live in the city Housing: Lives in a bungalow, uses well water and firewood for cooking Diet: Mostly yam, garri, okro soup. Rarely eats meat or fruits  Presenting Complaints:  Gradual worsening of pain in both knees over the past 6 months, now affecting ability to walk long distances. Complains of morning stiffness in joints that eases slightly after movement. Occasional swelling of ankles, especially in the evenings. Recently started feeling slight numbness in fingers. Reports one episode of dizziness last week while trying to stand up from bed. Sometimes forgets to take her BP medication, especially when she “feels okay.” No chest pain or palpitations. Reports difficulty sleeping due to pain at night. No fall or trauma, but uses a walking stick to support herself now.",
-      "extracted_symptoms": [
-          "gradual worsening of pain in both knees over the past 6 months, now affecting ability to walk long distances",
-          "morning stiffness in joints that eases slightly after movement",
-          "occasional swelling of ankles, especially in the evenings",
-          "slight numbness in fingers",
-          "one episode of dizziness last week while trying to stand up from bed",
-          "difficulty sleeping due to pain at night"
-      ],
-      "retrieved_guidelines_summary": [
-          {
-              "source": "CHO Guidelines",
-              "code": "7.1",
-              "case": "Joint pain or reduced mobility",
-              "score": 1.2347203493118286,
-              "_id": "684a19aace76826035a86785"
-          },
-          {
-              "source": "CHO Guidelines",
-              "code": "5.27",
-              "case": "Pain or swelling in limbs",
-              "score": 1.2597465515136719,
-              "_id": "684a19aace76826035a86786"
-          },
-          {
-              "source": "CHO Guidelines",
-              "code": "5.18",
-              "case": "Pain, stiffness, or swelling in neck",
-              "score": 1.33315908908844,
-              "_id": "684a19aace76826035a86787"
-          }
-      ],
-      "triage_recommendation": {
-          "summary_of_findings": "The patient presents with gradual worsening bilateral knee pain, affecting mobility, morning stiffness, ankle swelling, and occasional dizziness.  Guideline Entry 1 (Musculo-Skeletal System Disorders) and Guideline Entry 2 (Pain or swelling in limbs) are most relevant, suggesting potential osteoarthritis, age-related degeneration, or arthritis.  The dizziness warrants further investigation.",
-          "recommended_actions_for_chw": [
-              "1. Prescribe analgesics.",
-              "2. Encourage mobility.",
-              "3. Refer for physiotherapy."
+      "consultation": {
+          "_id": "68510e995a7bde541ac15e01",
+          "consultant": "683ac168afd3eef0a3062a98",
+          "patient": "68506e11029889c478f0cbdb",
+          "title": "New Consultation",
+          "isActive": true,
+          "createdAt": "2025-06-17T06:43:37.724Z",
+          "updatedAt": "2025-06-17T06:58:43.462Z",
+          "messages": [
+              {
+                  "_id": "68510e995a7bde541ac15e03",
+                  "sender": "user",
+                  "userMessage": "I have headache.",
+                  "triageData": {
+                      "triage_recommendation": {
+                          "recommended_actions_for_chw": [],
+                          "key_guideline_references": [],
+                          "important_notes_for_chw": []
+                      },
+                      "extracted_symptoms": [],
+                      "retrieved_guidelines_summary": []
+                  },
+                  "createdAt": "2025-06-17T06:43:37.942Z"
+              },
+              {
+                  "_id": "68510eae5a7bde541ac15e06",
+                  "sender": "system",
+                  "triageData": {
+                      "mode": "chw_triage_text",
+                      "input_transcript": "I have headache.",
+                      "extracted_symptoms": [
+                          "headache"
+                      ],
+                      "retrieved_guidelines_summary": [
+                          {
+                              "source": "CHO Guidelines",
+                              "code": "5.9",
+                              "case": "Adult with headache",
+                              "score": 0.7942992448806763,
+                              "_id": "68510eae5a7bde541ac15e07"
+                          },
+                          {
+                              "source": "CHEW Guidelines",
+                              "code": "5.9",
+                              "case": "Acute or chronic headache",
+                              "score": 0.9419989585876465,
+                              "_id": "68510eae5a7bde541ac15e08"
+                          },
+                          {
+                              "source": "CHO Guidelines",
+                              "code": "3.7",
+                              "case": "Complaint of headache",
+                              "score": 0.9740065336227417,
+                              "_id": "68510eae5a7bde541ac15e09"
+                          }
+                      ],
+                      "triage_recommendation": {
+                          "summary_of_findings": "The patient presents with a headache.  Guideline entries 1 and 2 are most relevant, suggesting the headache could be a tension headache, migraine, or have a systemic cause.  Further information is needed to determine the severity and nature of the headache.",
+                          "recommended_actions_for_chw": [
+                              "1. Treat symptomatically.",
+                              "2. Refer if headache is severe, chronic, or if neurologic signs are present."
+                          ],
+                          "urgency_level": "Refer to Clinic",
+                          "key_guideline_references": [
+                              "N/A - Code: 5.9, Case: Adult with headache",
+                              "N/A - Code: 5.9, Case: Acute or chronic headache"
+                          ],
+                          "important_notes_for_chw": []
+                      }
+                  },
+                  "createdAt": "2025-06-17T06:43:58.778Z"
+              },
+              {
+                  "_id": "6851121e3160203b4785508a",
+                  "sender": "user",
+                  "userMessage": "I have headache.",
+                  "triageData": {
+                      "triage_recommendation": {
+                          "recommended_actions_for_chw": [],
+                          "key_guideline_references": [],
+                          "important_notes_for_chw": []
+                      },
+                      "extracted_symptoms": [],
+                      "retrieved_guidelines_summary": []
+                  },
+                  "createdAt": "2025-06-17T06:58:38.770Z"
+              },
+              {
+                  "_id": "685112233160203b4785508d",
+                  "sender": "system",
+                  "triageData": {
+                      "mode": "chw_triage_text",
+                      "input_transcript": "I have headache.",
+                      "extracted_symptoms": [
+                          "headache"
+                      ],
+                      "retrieved_guidelines_summary": [
+                          {
+                              "source": "CHO Guidelines",
+                              "code": "5.9",
+                              "case": "Adult with headache",
+                              "score": 0.7942992448806763,
+                              "_id": "685112233160203b4785508e"
+                          },
+                          {
+                              "source": "CHEW Guidelines",
+                              "code": "5.9",
+                              "case": "Acute or chronic headache",
+                              "score": 0.9419989585876465,
+                              "_id": "685112233160203b4785508f"
+                          },
+                          {
+                              "source": "CHO Guidelines",
+                              "code": "3.7",
+                              "case": "Complaint of headache",
+                              "score": 0.9740065336227417,
+                              "_id": "685112233160203b47855090"
+                          }
+                      ],
+                      "triage_recommendation": {
+                          "summary_of_findings": "The patient presents with a headache.  Guideline entries 1 and 2 are most relevant, suggesting the headache could be a tension headache, migraine, or have a systemic cause.  Further information is needed to determine the severity and nature of the headache.",
+                          "recommended_actions_for_chw": [
+                              "1. Treat symptomatically.",
+                              "2. Refer if headache is severe, chronic, or if neurologic signs are present."
+                          ],
+                          "urgency_level": "Refer to Clinic",
+                          "key_guideline_references": [
+                              "N/A - Code: 5.9, Case: Adult with headache",
+                              "N/A - Code: 5.9, Case: Acute or chronic headache"
+                          ],
+                          "important_notes_for_chw": []
+                      }
+                  },
+                  "createdAt": "2025-06-17T06:58:43.189Z"
+              }
           ],
-          "urgency_level": "Refer to Clinic",
-          "key_guideline_references": [
-              "N/A - Code: 7.1, Case: Joint pain or reduced mobility",
-              "N/A - Code: 5.27, Case: Pain or swelling in limbs"
-          ],
-          "important_notes_for_chw": [
-              "The dizziness reported requires further assessment by a clinician to rule out other causes.",
-              "Monitor for worsening symptoms or new symptoms."
-          ]
+          "messageCount": 4
       }
   },
-  "_id": "684a19aace76826035a86784",
-  "timestamp": "2025-06-12T00:04:58.733Z",
-  "createdAt": "2025-06-12T00:04:58.734Z",
-  "updatedAt": "2025-06-12T00:04:58.734Z",
-  "__v": 0
+  "statusCode": 200
 }

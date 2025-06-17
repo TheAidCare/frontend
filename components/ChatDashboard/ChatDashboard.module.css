@@ -29,7 +29,7 @@
 }
 
 .collapsibleContent.open {
-  max-height: 200px; /* Adjust based on your needs */
+  max-height: 400px; /* Increased to accommodate more consultations */
   overflow-y: auto;
 }
 
@@ -39,4 +39,13 @@
 
 .chevronIcon.open {
   transform: rotate(180deg);
+}
+
+.consultationItem {
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.consultationItem:hover {
+  background-color: #f3f4f6;
 }
