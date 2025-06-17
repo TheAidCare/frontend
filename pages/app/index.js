@@ -1,42 +1,107 @@
-import { useEffect, useState } from 'react';
+// frontend/pages/app/index.js
+import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { getSavedUser } from '@/utils/auth';
-import Sidebar from '@/components/Sidebar';
-import styles from "@/styles/app.module.css";
-import { RxHamburgerMenu } from 'react-icons/rx';
+import { useAppContext } from '@/context/AppContext';
+import ChatDashboard from '@/components/ChatDashboard';
+import NewPatientModal from '@/components/patients/NewPatientModal';
+import Loader from '@/components/Loader';
 
 export default function AppHome() {
   const router = useRouter();
-  const [user, setUser] = useState(null);
-  const [openSidebar, setOpenSidebar] = useState(false);
+  const { 
+    user, 
+    isNewPatientModalOpen, 
+    openNewPatientModal, 
+    closeNewPatientModal,
+    onPatientAdded
+  } = useAppContext();
 
   useEffect(() => {
-    const storedUser = getSavedUser();
-    if (!storedUser) {
-      router.replace('/signup');
-    } else {
-      setUser(storedUser);
+    if (user === null && !localStorage.getItem("aidcare_token")) {
+      // router.replace('/login');
     }
-  }, []);
+  }, [user, router]);
 
-  const toggleSidebar = () => {
-    setOpenSidebar(!openSidebar);
+  const handlePatientCreatedAndNavigate = (newPatient) => {
+    onPatientAdded();
+    if (newPatient && (newPatient._id || newPatient.id)) {
+      router.push(`/app/patient/${newPatient._id || newPatient.id}`);
+    }
   };
 
-  if (!user) return null;
+  // Store the last action to be executed after patient creation
+  let lastAction = null;
+
+  const handleSendMessage = (message) => {
+    if (!isNewPatientModalOpen) {
+      lastAction = () => {
+        console.log('Message sent:', message);
+        // Actual message handling will go here
+      };
+      openNewPatientModal();
+    }
+  };
+
+  const handleAudioClick = () => {
+    if (!isNewPatientModalOpen) {
+      lastAction = () => {
+        // Handle audio feature
+        console.log('Audio feature clicked');
+      };
+      openNewPatientModal();
+    }
+  };
+
+  const handleMediaClick = () => {
+    if (!isNewPatientModalOpen) {
+      lastAction = () => {
+        // Handle media upload
+        console.log('Media upload clicked');
+      };
+      openNewPatientModal();
+    }
+  };
+
+  const handleInputFocus = () => {
+    if (!isNewPatientModalOpen) {
+      openNewPatientModal();
+    }
+  };
+
+  const handlePatientCreated = (newPatient) => {
+    onPatientAdded();
+    if (newPatient && (newPatient._id || newPatient.id)) {
+      router.push(`/app/patient/${newPatient._id || newPatient.id}`);
+      // Execute the last action if it exists
+      if (lastAction) {
+        lastAction();
+        lastAction = null;
+      }
+    }
+  };
+
+  if (!user) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <Loader />
+      </div>
+    );
+  }
 
   return (
     <>
-      <button
-        onClick={toggleSidebar}
-        className={`${styles.sidebarBtn} ${openSidebar ? styles.activeSidebarBtn : ''}`}
-      >
-        <RxHamburgerMenu className={styles.sidebarIcon} />
-      </button>
-      <Sidebar isOpen={openSidebar} onClose={() => setOpenSidebar(false)} />
-      <div className='flex justify-center items-center h-screen'>
-        Main Application
-      </div>
+      <ChatDashboard
+        showDefaultView={true}
+        onSendMessage={handleSendMessage}
+        onAudioClick={handleAudioClick}
+        onMediaClick={handleMediaClick}
+        onInputFocus={handleInputFocus}
+      />
+      <NewPatientModal
+        isOpen={isNewPatientModalOpen}
+        onClose={closeNewPatientModal}
+        onPatientCreated={handlePatientCreated}
+      />
     </>
   );
 }

@@ -1,0 +1,51 @@
+.mainContent {
+  padding-bottom: 80px; /* Space for the fixed input area */
+  height: calc(100vh - 80px); /* Full height minus input area */
+  overflow-y: auto;
+}
+
+.collapsibleHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+  background-color: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  margin: 1rem auto;
+  max-width: 28rem;
+  transition: background-color 0.2s;
+}
+
+.collapsibleHeader:hover {
+  background-color: #f3f4f6;
+}
+
+.collapsibleContent {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.collapsibleContent.open {
+  max-height: 400px; /* Increased to accommodate more consultations */
+  overflow-y: auto;
+}
+
+.chevronIcon {
+  transition: transform 0.3s ease;
+}
+
+.chevronIcon.open {
+  transform: rotate(180deg);
+}
+
+.consultationItem {
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.consultationItem:hover {
+  background-color: #f3f4f6;
+}
