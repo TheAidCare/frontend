@@ -506,7 +506,7 @@ const DefaultView = ({ onAudioClick, onMediaClick, patientId }) => {
       onMediaClick && onMediaClick(data);
     } catch (error) {
       console.error('Error uploading document:', error);
-      alert('Failed to upload document. Please try again.');
+      alert('Failed to upload document, Please try again.');
     } finally {
       setIsUploading(false);
       // Reset the file input
