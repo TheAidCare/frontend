@@ -13,6 +13,8 @@ import AudioRecorder from '../AudioRecorder';
 import PatientHeader from '../PatientHeader';
 import LoadingToast from '../LoadingToast';
 import DocumentUploader from '../DocumentUploader';
+import ConfirmationModal from '../ConfirmationModal';
+import { useAppContext } from '@/context/AppContext';
 
 const ChatDashboard = ({ 
   children,
@@ -28,11 +30,11 @@ const ChatDashboard = ({
   currentConsultationId: propConsultationId,
 }) => {
   const router = useRouter();
+  const { user } = useAppContext();
   const [openSidebar, setOpenSidebar] = useState(false);
   const [inputText, setInputText] = useState('');
   const [socket, setSocket] = useState(null);
   const [messages, setMessages] = useState([]);
-  const [activeTab, setActiveTab] = useState('suggestions');
   const [currentInference, setCurrentInference] = useState(null);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -40,15 +42,23 @@ const ChatDashboard = ({
   const [consultations, setConsultations] = useState([]);
   const [internalShowDefaultView, setInternalShowDefaultView] = useState(propShowDefaultView);
   const [isRecording, setIsRecording] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   const [toastState, setToastState] = useState({
     isVisible: false,
     message: '',
     type: 'loading'
   });
+  // New state to store pending send action
+  const [pendingSend, setPendingSend] = useState(false);
+  // New state to store the transcript when ready
+  const transcriptRef = useRef("");
 
   // Use either the prop setter or internal state setter
   const setShowDefaultView = propSetShowDefaultView || setInternalShowDefaultView;
   const showDefaultView = propShowDefaultView ?? internalShowDefaultView;
+
+  // Determine triage setting based on user role
+  const isTriageEnabled = user?.role === 'chw';
 
   const handleAudioClick = (startRecording) => {
     if (startRecording) {
@@ -92,9 +102,11 @@ const ChatDashboard = ({
           });
           if (!res.ok) throw new Error('Failed to fetch consultation details');
           const data = await res.json();
+          console.log(data)
 
           // Format and set messages from the consultation
           if (data.data?.consultation?.messages) {
+            let lastInference = null;
             const formattedMessages = data.data.consultation.messages.map(msg => {
               if (msg.sender === 'user') {
                 return {
@@ -102,10 +114,37 @@ const ChatDashboard = ({
                   content: msg.userMessage
                 };
               } else if (msg.sender === 'system') {
-                // Set the latest system message as current inference
-                setCurrentInference(msg.triageData);
+                // Check the actual data structure to determine which inference to use
+                if (msg.triageData && msg.triageData.triage_recommendation && msg.triageData.triage_recommendation.urgency_level) {
+                  // This is a triage response
+                  lastInference = msg.triageData;
+                } else if (msg.clinicalData && msg.clinicalData.clinical_support_details && msg.clinicalData.clinical_support_details.potential_conditions) {
+                  // This is a clinical response
+                  lastInference = msg.clinicalData;
+                } else {
+                  // Fallback: check which data has more meaningful content
+                  const triageHasContent = msg.triageData && (
+                    msg.triageData.triage_recommendation?.urgency_level ||
+                    msg.triageData.triage_recommendation?.summary_of_findings ||
+                    msg.triageData.triage_recommendation?.recommended_actions_for_chw?.length > 0
+                  );
+                  
+                  const clinicalHasContent = msg.clinicalData && (
+                    msg.clinicalData.clinical_support_details?.potential_conditions?.length > 0 ||
+                    msg.clinicalData.clinical_support_details?.suggested_investigations?.length > 0 ||
+                    msg.clinicalData.clinical_support_details?.alerts_and_flags?.length > 0
+                  );
+                  
+                  if (triageHasContent) {
+                lastInference = msg.triageData;
+                  } else if (clinicalHasContent) {
+                    lastInference = msg.clinicalData;
+                  }
+                }
               }
-            }).filter(Boolean); // Remove any undefined messages
+            }).filter(Boolean);
+            console.log(lastInference)
+            setCurrentInference(lastInference);
             setMessages(formattedMessages);
           }
         } catch (error) {
@@ -125,12 +164,12 @@ const ChatDashboard = ({
     });
 
     socket.on("connect", () => {
-      // console.log("WebSocket connected for patient:", patientId, propConsultationId ? `and consultation: ${propConsultationId}` : '');
+      console.log("WebSocket connected for patient:", patientId, propConsultationId ? `and consultation: ${propConsultationId}` : '');
       setSocket(socket);
     });
 
     socket.on("consultationId", (data) => {
-      // console.log("Received consultation ID:", data);
+      console.log("Received consultation ID:", data);
       setCurrentConsultationId(data);
     });
 
@@ -146,7 +185,7 @@ const ChatDashboard = ({
 
     socket.on("response", (data) => {
       console.log("Received response:", data);
-      if (data.sender === 'system' && data.triageData) {
+      if (data.sender === 'system') {
         const testId = data.consultationId;
         // If we have a new consultation ID and we're not already on a consultation page,
         // navigate to the consultation page after receiving the system response
@@ -155,8 +194,17 @@ const ChatDashboard = ({
           setIsProcessing(false);
           router.push(`/app/patient/${patientId}/consultation/${testId}`);
         }
-
+        console.log(data)
+        
+        // Use user role to determine which data to display
+        if (isTriageEnabled) {
+          // CHW user - show triage data
         setCurrentInference(data.triageData);
+        } else {
+          // Consultant/other users - show clinical data
+          setCurrentInference(data.clinicalData);
+        }
+        
         setShowDefaultView(false);
         setIsProcessing(false);
       }
@@ -220,32 +268,28 @@ const ChatDashboard = ({
     setOpenSidebar(!openSidebar);
   };
 
-  const handleSendMessage = async () => {
-    if (inputText.trim() && socket) {
-      try {
+  // Called by AudioRecorder when transcription is ready
+  const handleTranscription = (transcript) => {
+    transcriptRef.current = transcript;
+    actuallySendMessage(transcript, inputText);
+  };
+
+  // Send message through socket
+  const actuallySendMessage = (transcript, manualContext) => {
+    if (!socket) return;
         setIsProcessing(true);
-        if (!propConsultationId) {
-          // If no consultation ID exists, start a new consultation
           const messageData = {
-            transcript_text: inputText.trim(),
+      transcript_text: transcript,
+      consultant_note: manualContext,
+      triage: isTriageEnabled
           };
+    if (!currentConsultationId) {
           socket.emit("startConsultation", messageData);
-          // Don't clear input or set processing to false here
-          // Wait for the response event to handle that
         } else {
-          // If we have a consultation ID, send the message directly
-          const messageData = {
-            transcript_text: inputText.trim(),
-          };
           socket.emit("message", messageData);
-          setInputText('');
-          // Don't set processing to false here, wait for the response event
         }
-      } catch (error) {
-        console.error("Error sending message:", error);
-        setIsProcessing(false);
-      }
-    }
+    setInputText("");
+    // Do not set isProcessing to false here; wait for websocket response
   };
 
   const handleConsultationClick = (consultationId) => {
@@ -298,8 +342,7 @@ const ChatDashboard = ({
           <AudioRecorder 
             onToggle={handleAudioClick} 
             initialRecording={isRecording}
-            socket={socket}
-            currentConsultationId={currentConsultationId}
+            onTranscription={handleTranscription}
           />
         )}
 
@@ -338,72 +381,125 @@ const ChatDashboard = ({
           </div>
         )}
 
-        {/* Current Consultation Messages
-        {!showDefaultView && messages.length > 0 && (
+        {/* Inference Section */}
+        {!showDefaultView && currentInference && (
           <div className="max-w-md mx-auto px-4 mt-4">
-            <h3 className="font-medium mb-3">Current Consultation</h3>
-            <div className="space-y-3">
-              {messages.map((msg, idx) => (
-                <div 
-                  key={idx}
-                  className={`p-3 rounded-lg ${
-                    msg.sender === 'user' 
-                      ? 'bg-[#6366F1] text-white ml-auto' 
-                      : 'bg-gray-50 text-gray-700'
-                  } max-w-[80%]`}
-                >
-                  <p className="text-sm">{msg.content}</p>
-                  {msg.timeSent && (
-                    <p className="text-xs mt-1 opacity-75">
-                      {new Date(msg.timeSent).toLocaleTimeString()}
-                    </p>
+            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 space-y-4">
+              {/* For Triage Responses - check if triage data exists */}
+              {currentInference.triage_recommendation && (
+                <>
+                  {/* Urgency Level */}
+                  {currentInference.triage_recommendation?.urgency_level && (
+                    <div className="bg-red-50 p-3 rounded-lg border border-red-100">
+                      <h4 className="font-medium text-red-700 mb-1">Urgency Level</h4>
+                      <p className="text-red-600">{currentInference.triage_recommendation.urgency_level}</p>
+                    </div>
                   )}
+
+                  {/* Summary of Findings */}
+                  {currentInference.triage_recommendation?.summary_of_findings && (
+                    <div className="bg-green-50 p-3 rounded-lg border border-green-100">
+                      <h4 className="font-medium text-green-700 mb-2">Summary of Findings</h4>
+                      <p className="text-green-600">{currentInference.triage_recommendation.summary_of_findings}</p>
+                    </div>
+                  )}
+
+                  {/* Recommended Actions */}
+                  {currentInference.triage_recommendation?.recommended_actions_for_chw?.length > 0 && (
+                    <div className="bg-blue-50 p-3 rounded-lg border border-blue-100">
+                      <h4 className="font-medium text-blue-700 mb-2">Recommended Actions</h4>
+                      <ul className="list-disc list-inside space-y-1">
+                        {currentInference.triage_recommendation.recommended_actions_for_chw.map((action, idx) => (
+                          <li key={idx} className="text-blue-600">{action}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </>
+              )}
+
+              {/* For Clinical Responses - check if clinical data exists */}
+              {currentInference.clinical_support_details && (
+                <>
+                  {/* Potential Conditions */}
+                  {currentInference.clinical_support_details?.potential_conditions?.length > 0 && (
+                    <div className="bg-purple-50 p-3 rounded-lg border border-purple-100">
+                      <h4 className="font-medium text-purple-700 mb-2">Potential Conditions</h4>
+                      <div className="space-y-2">
+                        {currentInference.clinical_support_details.potential_conditions.map((condition, idx) => (
+                          <div key={idx} className="bg-purple-100 p-2 rounded">
+                            <p className="text-purple-700 font-medium">{condition.name}</p>
+                            <p className="text-purple-600 text-sm">{condition.reasoning}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Suggested Investigations */}
+                  {currentInference.clinical_support_details?.suggested_investigations?.length > 0 && (
+                    <div className="bg-blue-50 p-3 rounded-lg border border-blue-100">
+                      <h4 className="font-medium text-blue-700 mb-2">Suggested Investigations</h4>
+                      <div className="space-y-2">
+                        {currentInference.clinical_support_details.suggested_investigations.map((investigation, idx) => (
+                          <div key={idx} className="bg-blue-100 p-2 rounded">
+                            <p className="text-blue-700 font-medium">{investigation.test}</p>
+                            <p className="text-blue-600 text-sm">{investigation.rationale}</p>
                 </div>
               ))}
             </div>
           </div>
-        )} */}
+                  )}
 
-        {/* Inference Section with Tabs */}
-        {!showDefaultView && currentInference && (
-          <div className="max-w-md mx-auto px-4 mt-4">
-            {/* Tab Buttons */}
-            <div className="flex rounded-full bg-gray-100 p-1 mb-4">
-              <button
-                onClick={() => setActiveTab('suggestions')}
-                className={`flex-1 py-2 rounded-full text-sm font-medium transition-all ${
-                  activeTab === 'suggestions'
-                    ? 'bg-white text-[#6366F1] shadow'
-                    : 'text-gray-500'
-                }`}
-              >
-                Suggestions
-              </button>
-              <button
-                onClick={() => setActiveTab('summary')}
-                className={`flex-1 py-2 rounded-full text-sm font-medium transition-all ${
-                  activeTab === 'summary'
-                    ? 'bg-white text-[#6366F1] shadow'
-                    : 'text-gray-500'
-                }`}
-              >
-                Summary
-              </button>
+                  {/* Alerts and Flags */}
+                  {currentInference.clinical_support_details?.alerts_and_flags?.length > 0 && (
+                    <div className="bg-red-50 p-3 rounded-lg border border-red-100">
+                      <h4 className="font-medium text-red-700 mb-2">Alerts and Flags</h4>
+                      <ul className="list-disc list-inside space-y-1">
+                        {currentInference.clinical_support_details.alerts_and_flags.map((alert, idx) => (
+                          <li key={idx} className="text-red-600">{alert}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Differential Summary */}
+                  {currentInference.clinical_support_details?.differential_summary_for_doctor && (
+                    <div className="bg-green-50 p-3 rounded-lg border border-green-100">
+                      <h4 className="font-medium text-green-700 mb-2">Differential Summary</h4>
+                      <p className="text-green-600">{currentInference.clinical_support_details.differential_summary_for_doctor}</p>
             </div>
+                  )}
+                </>
+              )}
 
-            {/* Tab Content */}
-            <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
-              {activeTab === 'suggestions' ? (
-                <div>
-                  <h3 className="font-medium mb-3">Questions to Ask</h3>
-                  {currentInference.triage_recommendation.recommended_actions_for_chw.map((action, idx) => (
-                    <p key={idx} className="mb-2 text-gray-700">{action}</p>
-                  ))}
+              {/* Common sections for both response types */}
+              {/* Extracted Symptoms */}
+              {currentInference.extracted_symptoms?.length > 0 && (
+                <div className="bg-purple-50 p-3 rounded-lg border border-purple-100">
+                  <h4 className="font-medium text-purple-700 mb-2">Extracted Symptoms</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {currentInference.extracted_symptoms.map((symptom, idx) => (
+                      <span key={idx} className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm">
+                        {symptom}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              ) : (
-                <div>
-                  <h3 className="font-medium mb-3">Key Points</h3>
-                  <p className="text-gray-700">{currentInference.triage_recommendation.summary_of_findings}</p>
+              )}
+
+              {/* Retrieved Guidelines */}
+              {currentInference.retrieved_guidelines_summary?.length > 0 && (
+                <div className="bg-yellow-50 p-3 rounded-lg border border-yellow-100">
+                  <h4 className="font-medium text-yellow-700 mb-2">Retrieved Guidelines</h4>
+                  <div className="space-y-2">
+                    {currentInference.retrieved_guidelines_summary.map((guideline, idx) => (
+                      <div key={idx} className="bg-yellow-100 p-2 rounded">
+                        <p className="text-yellow-700 font-medium">{guideline.source} - {guideline.code}</p>
+                        <p className="text-yellow-600 text-sm">{guideline.case}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
@@ -427,13 +523,13 @@ const ChatDashboard = ({
       {/* Bottom Input Area */}
       <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t">
         <div className="max-w-md mx-auto flex gap-2">
-          <input
-            type="text"
+          <textarea
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
             onFocus={onInputFocus}
             placeholder="Enter notes or symptoms manually."
-            className="flex-1 p-3 rounded-lg border border-gray-200 focus:outline-none focus:border-[#6366F1]"
+            className="flex-1 p-3 rounded-lg border border-gray-200 focus:outline-none focus:border-[#6366F1] resize-none min-h-[48px] max-h-[120px]"
+            rows={2}
           />
           {!showDefaultView && (
             <DocumentUploader
@@ -442,12 +538,6 @@ const ChatDashboard = ({
               token={token}
             />
           )}
-          <button
-            onClick={handleSendMessage}
-            className="p-3 text-[#6366F1] hover:bg-gray-100 rounded-lg transition-colors cursor-pointer"
-          >
-            <IoSend size={24} />
-          </button>
         </div>
       </div>
     </div>
