@@ -49,3 +49,22 @@
 .consultationItem:hover {
   background-color: #f3f4f6;
 }
+
+.multiLineInput {
+  width: 100%;
+  min-height: 48px;
+  max-height: 120px;
+  resize: none;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+  font-size: 1rem;
+  line-height: 1.5;
+  box-sizing: border-box;
+}
+
+.inputArea {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
