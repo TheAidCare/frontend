@@ -367,8 +367,8 @@ const ChatDashboard = ({
                     onClick={() => handleConsultationClick(consultation.id)}
                     className={`mb-2 p-3 rounded bg-gray-50 text-gray-700 cursor-pointer hover:bg-gray-100 transition-colors`}
                   >
-                    <div className="flex justify-between items-start">
-                      <p className="text-sm">{consultation.firstMessage}</p>
+                    <div className="flex justify-between gap-3 items-center">
+                      <p className={`text-sm ${styles.consultationMessage}`}>{consultation.firstMessage}</p>
                       <div className="text-xs text-gray-500">
                         <p>{consultation.date}</p>
                         <p>{consultation.time}</p>

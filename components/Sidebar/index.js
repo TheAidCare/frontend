@@ -1,5 +1,5 @@
 // frontend/components/Sidebar/index.js
-import { IoLogOutOutline, IoSearch } from "react-icons/io5";
+import { IoLogOutOutline, IoSearch, IoPersonAddOutline } from "react-icons/io5";
 import styles from "./Sidebar.module.css"; //
 import { useEffect, useState } from "react"; // Removed useCallback as fetchPatients comes from context
 import { FaUserMd, FaUserPlus } from "react-icons/fa";
@@ -36,9 +36,19 @@ const Sidebar = ({ isOpen, onClose }) => {
     router.push(`/app/patient/${patientId}`);
     onClose(); 
   };
+
+  const handleOnboardingClick = () => {
+    if (user?.organization) {
+      router.push(`/onboard?orgId=${user.organization}`);
+      onClose();
+    }
+  };
   
   const userName = user ? `${user.firstName} ${user.lastName}` : "Loading...";
   const userRole = user ? user.role : "";
+
+  // Check if user can access onboarding (admin or organization roles)
+  const canAccessOnboarding = userRole === 'admin' || userRole === 'organization';
 
   let rolesDisplay = {
     consultant: "Clinical Consultant",
@@ -76,6 +86,17 @@ const Sidebar = ({ isOpen, onClose }) => {
             <FaUserPlus style={{ marginRight: '8px' }} />
             New Patient
           </button>
+
+          {/* Onboarding Link for Admin/Organization Users */}
+          {canAccessOnboarding && (
+            <button
+              className={styles.onboardingBtn}
+              onClick={handleOnboardingClick}
+            >
+              <IoPersonAddOutline style={{ marginRight: '8px' }} />
+              Invite Team Members
+            </button>
+          )}
         </div>
 
         <div className={styles.sidebarMain}> {/* */}
