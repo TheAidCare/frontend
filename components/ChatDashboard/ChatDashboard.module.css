@@ -2,6 +2,17 @@
   padding-bottom: 80px; /* Space for the fixed input area */
   height: calc(100vh - 80px); /* Full height minus input area */
   overflow-y: auto;
+  flex: 1;
+}
+
+/* Desktop styles */
+@media (min-width: 1024px) {
+  .mainContent {
+    padding-bottom: 120px;
+    height: 100vh;
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 .collapsibleHeader {
@@ -16,6 +27,13 @@
   margin: 1rem auto;
   max-width: 28rem;
   transition: background-color 0.2s;
+}
+
+@media (min-width: 1024px) {
+  .collapsibleHeader {
+    max-width: none;
+    margin: 1rem 0;
+  }
 }
 
 .collapsibleHeader:hover {
@@ -50,6 +68,16 @@
   background-color: #f3f4f6;
 }
 
+.consultationMessage {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.4;
+}
+
 .multiLineInput {
   width: 100%;
   min-height: 48px;
@@ -67,4 +95,12 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+/* Desktop input area styles */
+@media (min-width: 1024px) {
+  .inputArea {
+    flex-direction: row;
+    align-items: flex-end;
+  }
 }
