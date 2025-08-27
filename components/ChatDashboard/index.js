@@ -154,7 +154,7 @@ const ChatDashboard = ({
       fetchConsultationDetails();
     }
 
-    const socket = io("wss://aidcare-qrzkj.ondigitalocean.app", {
+    const socket = io(process.env.NEXT_PUBLIC_WEBSOCKET_URL, {
       reconnectionDelayMax: 10000,
       query: {
         "token": token,
