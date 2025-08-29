@@ -18,6 +18,7 @@ export default function ConsultationView() {
   } = useAppContext();
   const [patientData, setPatientData] = useState(null);
   const [loading, setLoading] = useState(true);
+  
 
   useEffect(() => {
     if (patientId && token) {
