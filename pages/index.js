@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import Head from 'next/head';
 import Link from 'next/link';
 import Logo from '@/components/Logo';
 import { getSavedUser } from '@/utils/auth';
@@ -26,6 +27,23 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-white">
+      <Head>
+        <title>AidCare – AI‑Powered Healthcare Support for Communities & Clinicians</title>
+        <meta name="description" content="AidCare helps CHWs and clinicians capture consultations, extract key clinical details, and receive role‑aware guidance for triage or clinical decision support." />
+        <meta name="keywords" content="AidCare, healthcare, CHW, clinician, triage, clinical decision support, documentation, AI" />
+        <link rel="canonical" href="https://www.aidcare.example" />
+        {/* Open Graph */}
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="AidCare – AI‑Powered Healthcare Support" />
+        <meta property="og:description" content="Record, extract, and act. Role‑aware guidance for CHWs and clinicians." />
+        <meta property="og:url" content="https://www.aidcare.example" />
+        <meta property="og:image" content="/vercel.svg" />
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="AidCare – AI‑Powered Healthcare Support" />
+        <meta name="twitter:description" content="Record, extract, and act. Role‑aware guidance for CHWs and clinicians." />
+        <meta name="twitter:image" content="/vercel.svg" />
+      </Head>
       {/* Top Navigation */}
       <header className="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-gray-100">
         <div className="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
