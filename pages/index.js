@@ -43,7 +43,7 @@ export default function Home() {
 		},
 	];
 	return (
-		<div className="bg-[#F7F8FA] relative bg-[url('/Background.svg')] bg-no-repeat">
+		<div className="bg-[#F7F8FA] relative bg-[url('htts://res.cloudinary.com/dysj33nst/image/upload/v1760547570/Backgroundjj_phcyao.jpg')] bg-no-repeat">
 			<div className="pt-7 fixed z-[999] w-full flex justify-center">
 				<nav className="mx-64  bg-[#2E2E2E] rounded-[100px] p-3.5 flex items-center justify-between font-semibold text-[16px]">
 					<div className="flex items-center space-x-[34px]">
@@ -176,7 +176,9 @@ export default function Home() {
 						<div className="h-[360px] w-[280px] relative rounded-[12px]">
 							<Image
 								alt="Overwhelmed clinicians with high patient loads."
-								src={"/man1.png"}
+								src={
+									"https://res.cloudinary.com/dysj33nst/image/upload/v1760547008/kjerefrereq_pbpzgo.svg"
+								}
 								className="object-cover rounded-[12px]"
 								fill
 							/>
@@ -186,7 +188,9 @@ export default function Home() {
 						<div className="h-[380px] w-[280px] relative rounded-[12px]">
 							<Image
 								alt="Community Health Workers Lacking Diagnostic Support"
-								src={"/woman1.png"}
+								src={
+									"https://res.cloudinary.com/dysj33nst/image/upload/v1760547008/qejasvuwqbhjb_lhyrgj.svg"
+								}
 								className="object-cover rounded-[12px]"
 								fill
 							/>
@@ -272,7 +276,9 @@ export default function Home() {
 						<div className="h-[360px] w-[280px] relative rounded-[12px]">
 							<Image
 								alt="Customer Focus."
-								src={"/man1.png"}
+								src={
+									"https://res.cloudinary.com/dysj33nst/image/upload/v1760547031/hgqvhrbj_y6dnho.svg"
+								}
 								className="object-cover rounded-[12px]"
 								fill
 							/>
@@ -382,7 +388,9 @@ export default function Home() {
 						<div className="relative h-[560px] w-[500px]">
 							<Image
 								priority
-								src={"/group-images.svg"}
+								src={
+									"https://res.cloudinary.com/dysj33nst/image/upload/v1760547045/bjabjbqna_ez609h.svg"
+								}
 								fill
 								className="object-cover"
 							/>
