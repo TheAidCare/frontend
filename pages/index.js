@@ -3,6 +3,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import Logo from '@/components/Logo';
 import { getSavedUser } from '@/utils/auth';
+import { trackConversions } from '@/lib/gtag';
 
 export default function Home() {
   const [user, setUser] = useState(null);
@@ -14,6 +15,9 @@ export default function Home() {
       const saved = getSavedUser();
       if (saved) setUser(saved);
     } catch {}
+    
+    // Track landing page view
+    trackConversions.landingPageView();
   }, []);
 
   // Close on ESC
@@ -62,8 +66,20 @@ export default function Home() {
               <Link href="/app" className="px-4 py-2 rounded-lg bg-gray-900 text-white hover:bg-gray-800 transition">Go to app</Link>
             ) : (
               <>
-                <Link href="/login" className="px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-50 transition">Log in</Link>
-                <Link href="/signup" className="px-4 py-2 rounded-lg bg-gray-900 text-white hover:bg-gray-800 transition">Get started</Link>
+                <Link 
+                  href="/login" 
+                  className="px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-50 transition"
+                  onClick={() => trackConversions.loginFromLanding()}
+                >
+                  Log in
+                </Link>
+                <Link 
+                  href="/signup" 
+                  className="px-4 py-2 rounded-lg bg-gray-900 text-white hover:bg-gray-800 transition"
+                  onClick={() => trackConversions.signupFromLanding()}
+                >
+                  Get started
+                </Link>
               </>
             )}
           </div>
@@ -100,7 +116,13 @@ export default function Home() {
                     We’re polishing the walkthrough. Sign up to get early access to the demo.
                   </p>
                   <div className="mt-4">
-                    <Link href="/signup" className="px-4 py-2 rounded-lg bg-[#6366F1] text-white hover:bg-[#5457ea] transition">Get early access</Link>
+                    <Link 
+                      href="/signup" 
+                      className="px-4 py-2 rounded-lg bg-[#6366F1] text-white hover:bg-[#5457ea] transition"
+                      onClick={() => trackConversions.signupFromLanding()}
+                    >
+                      Get early access
+                    </Link>
                   </div>
                 </div>
               </div>
@@ -239,8 +261,20 @@ export default function Home() {
                 <p className="mt-2 text-gray-600 text-sm md:text-base">Reduce documentation time and improve triage and clinical decisions for communities and clinicians.</p>
               </div>
               <div className="flex flex-wrap gap-3 md:justify-end">
-                <Link href="/signup" className="px-5 py-3 rounded-xl bg-[#6366F1] text-white font-medium hover:bg-[#5457ea] transition">Sign up today</Link>
-                <Link href="/login" className="px-5 py-3 rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-50 transition">Log in</Link>
+                <Link 
+                  href="/signup" 
+                  className="px-5 py-3 rounded-xl bg-[#6366F1] text-white font-medium hover:bg-[#5457ea] transition"
+                  onClick={() => trackConversions.signupFromLanding()}
+                >
+                  Sign up today
+                </Link>
+                <Link 
+                  href="/login" 
+                  className="px-5 py-3 rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-50 transition"
+                  onClick={() => trackConversions.loginFromLanding()}
+                >
+                  Log in
+                </Link>
               </div>
             </div>
           </div>

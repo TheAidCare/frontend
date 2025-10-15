@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { IoLockClosedOutline, IoMailOutline, IoEyeOffOutline, IoEyeOutline } from 'react-icons/io5';
 import Link from 'next/link';
 import Logo from '@/components/Logo';
+import { trackUserEngagement } from '@/lib/gtag';
 
 export default function Login() {
   const router = useRouter();
@@ -35,6 +36,10 @@ export default function Login() {
       const info = data.data
       localStorage.setItem('aidcare_user', JSON.stringify(info.user));
       localStorage.setItem('aidcare_token', info.token);
+      
+      // Track successful login
+      trackUserEngagement.login('email');
+      
       router.push(`/app`);
     } catch (err) {
       setError(err.message);

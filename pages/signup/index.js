@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { IoLockClosedOutline, IoMailOutline, IoPersonOutline, IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
 import Link from 'next/link';
 import Logo from '@/components/Logo';
+import { trackUserEngagement } from '@/lib/gtag';
 
 export default function SignupPage() {
   const router = useRouter();
@@ -41,6 +42,10 @@ export default function SignupPage() {
       const info = data.data
       localStorage.setItem('aidcare_user', JSON.stringify(info.user));
       localStorage.setItem('aidcare_token', info.token);
+      
+      // Track successful signup
+      trackUserEngagement.signup('email');
+      
       router.push(`/signup/success?orgId=${info.user.organization}&orgName=${info.organization.name}`);
     } catch (err) {
       setError(err.message);
