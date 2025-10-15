@@ -76,21 +76,27 @@ export default function Home() {
 					<div className="flex -space-x-2 overflow-hidden">
 						<div className="w-[36px] h-[36px] rounded-[100px] relative">
 							<Image
-								src={"/pro-user1.svg"}
+								src={
+									"https://res.cloudinary.com/dysj33nst/image/upload/v1760546989/pro-user2_u4tgx8.svg"
+								}
 								className="rounded-[100px] object-cover"
 								fill
 							/>
 						</div>
 						<div className="w-[36px] h-[36px] rounded-[100px] relative">
 							<Image
-								src={"/pro-user2.svg"}
+								src={
+									"https://res.cloudinary.com/dysj33nst/image/upload/v1760546991/pro-user3_y8vcxg.svg"
+								}
 								className="rounded-[100px] object-cover"
 								fill
 							/>
 						</div>
 						<div className="w-[36px] h-[36px] rounded-[100px] relative">
 							<Image
-								src={"/pro-user3.svg"}
+								src={
+									"https://res.cloudinary.com/dysj33nst/image/upload/v1760546993/pro-user1_xddslm.svg"
+								}
 								className="rounded-[100px] object-cover"
 								fill
 							/>
@@ -124,7 +130,13 @@ export default function Home() {
 			<div className="flex justify-center pt-[50px]">
 				{/* Video container - Change this to AidCare demo when ready */}
 				<div className="relative w-[1101px] h-[575px] rounded-[20px]">
-					<Image src={"/Video-Container.svg"} fill className="object-cover" />
+					<Image
+						src={
+							"https://res.cloudinary.com/dysj33nst/image/upload/v1760547003/Video-Container_txgpom.svg"
+						}
+						fill
+						className="object-cover"
+					/>
 				</div>
 			</div>
 			<div className="bg-[url('/net-bg.svg')] bg-no-repeat flex flex-col items-center justify-center">
@@ -374,7 +386,9 @@ export default function Home() {
 						<div className="relative h-[560px] w-[525px]">
 							<Image
 								priority
-								src={"/mobile-aidcare.svg"}
+								src={
+									"https://res.cloudinary.com/dysj33nst/image/upload/v1760548808/mobile-aidcare_r2pxtm.svg"
+								}
 								fill
 								className="object-cover"
 							/>
