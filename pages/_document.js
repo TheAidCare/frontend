@@ -1,8 +1,6 @@
 import { Html, Head, Main, NextScript } from "next/document";
 
 export default function Document() {
-  const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_ID;
-
   return (
     <Html lang="en">
       <Head>
@@ -22,31 +20,6 @@ export default function Document() {
         )}
         {process.env.NEXT_PUBLIC_WEBSOCKET_URL && (
           <link rel="preconnect" href={process.env.NEXT_PUBLIC_WEBSOCKET_URL.replace(/^ws(s)?:/, 'https:')} crossOrigin="anonymous" />
-        )}
-        
-        {/* Google Analytics */}
-        {GA_TRACKING_ID && (
-          <>
-            <script
-              async
-              src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
-            />
-            <script
-              dangerouslySetInnerHTML={{
-                __html: `
-                  window.dataLayer = window.dataLayer || [];
-                  function gtag(){dataLayer.push(arguments);}
-                  gtag('js', new Date());
-                  gtag('config', '${GA_TRACKING_ID}', {
-                    page_path: window.location.pathname,
-                    anonymize_ip: true,
-                    allow_google_signals: false,
-                    allow_ad_personalization_signals: false,
-                  });
-                `,
-              }}
-            />
-          </>
         )}
       </Head>
       <body>
