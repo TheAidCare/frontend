@@ -57,12 +57,12 @@ export default function SignupPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white flex items-center">
-      <div className="max-w-6xl mx-auto w-full px-4 py-12 md:py-20 grid md:grid-cols-2 items-center gap-12">
+      <div className="max-w-6xl mx-auto w-full px-4 py-12 md:py-20 grid md:grid-cols-2 items-start gap-12">
         {/* Left: brand + value prop */}
-        <div className="hidden md:flex flex-col justify-center md:pr-8">
+        <div className="hidden md:flex flex-col md:pr-8">
           <Logo />
           <h1 className="mt-6 text-3xl font-bold text-gray-900">Create your organization</h1>
-          <p className="mt-2 text-gray-600">Set up your workspace and invite your team when you’re ready.</p>
+          <p className="mt-2 text-gray-600">Set up your workspace and invite your team when you're ready.</p>
           <ul className="mt-6 text-sm text-gray-600 space-y-2 list-disc list-inside">
             <li>Organization‑level access</li>
             <li>Role‑aware guidance for CHWs and Consultants</li>
@@ -82,13 +82,15 @@ export default function SignupPage() {
           )}
 
           <form
-            className="mt-6 space-y-4"
+            className="mt-6 space-y-5"
             onSubmit={(e) => { e.preventDefault(); handleSignup(); }}
           >
-            <label className="block">
-              <span className="text-sm font-medium text-gray-700">Organization name</span>
-              <div className="mt-1 flex items-center gap-2 rounded-lg border border-gray-300 px-3 py-2 focus-within:border-[#6366F1]">
-                <IoPersonOutline className="text-gray-500" />
+            <div className="space-y-1">
+              <label className="text-sm font-medium text-gray-700">Organization name</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <IoPersonOutline className="h-5 w-5 text-gray-400" />
+                </div>
                 <input
                   id="orgName"
                   type="text"
@@ -96,15 +98,17 @@ export default function SignupPage() {
                   value={orgName}
                   onChange={(e) => setOrgName(e.target.value)}
                   placeholder="e.g. Sunrise Health"
-                  className="w-full outline-none placeholder:text-gray-400"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#6366F1] focus:border-[#6366F1] outline-none placeholder:text-gray-400"
                 />
               </div>
-            </label>
+            </div>
 
-            <label className="block">
-              <span className="text-sm font-medium text-gray-700">Organization email</span>
-              <div className="mt-1 flex items-center gap-2 rounded-lg border border-gray-300 px-3 py-2 focus-within:border-[#6366F1]">
-                <IoMailOutline className="text-gray-500" />
+            <div className="space-y-1">
+              <label className="text-sm font-medium text-gray-700">Organization email</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <IoMailOutline className="h-5 w-5 text-gray-400" />
+                </div>
                 <input
                   id="orgEmail"
                   type="email"
@@ -112,15 +116,17 @@ export default function SignupPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="admin@org.com"
-                  className="w-full outline-none placeholder:text-gray-400"
+                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#6366F1] focus:border-[#6366F1] outline-none placeholder:text-gray-400"
                 />
               </div>
-            </label>
+            </div>
 
-            <label className="block">
-              <span className="text-sm font-medium text-gray-700">Password</span>
-              <div className="mt-1 flex items-center gap-2 rounded-lg border border-gray-300 px-3 py-2 focus-within:border-[#6366F1]">
-                <IoLockClosedOutline className="text-gray-500" />
+            <div className="space-y-1">
+              <label className="text-sm font-medium text-gray-700">Password</label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <IoLockClosedOutline className="h-5 w-5 text-gray-400" />
+                </div>
                 <input
                   id="orgPassword"
                   type={showPassword ? 'text' : 'password'}
@@ -128,23 +134,23 @@ export default function SignupPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Create a password"
-                  className="w-full outline-none placeholder:text-gray-400"
+                  className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#6366F1] focus:border-[#6366F1] outline-none placeholder:text-gray-400"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
-                  className="text-gray-500 hover:text-gray-700"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
                   aria-label={showPassword ? 'Hide password' : 'Show password'}
                 >
-                  {showPassword ? <IoEyeOffOutline /> : <IoEyeOutline />}
+                  {showPassword ? <IoEyeOffOutline className="h-5 w-5" /> : <IoEyeOutline className="h-5 w-5" />}
                 </button>
               </div>
-            </label>
+            </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full rounded-xl bg-[#6366F1] text-white py-3 font-medium hover:bg-[#5457ea] transition"
+              className="w-full rounded-xl bg-[#6366F1] text-white py-3 font-medium hover:bg-[#5457ea] transition disabled:opacity-50"
             >
               {loading ? 'Creating…' : 'Create account'}
             </button>

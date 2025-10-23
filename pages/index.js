@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Logo from '@/components/Logo';
 import { getSavedUser } from '@/utils/auth';
 import { trackConversions } from '@/lib/gtag';
+import { IoPlayCircleOutline, IoCheckmarkCircle, IoPeople, IoGrid, IoPerson, IoArrowForward } from 'react-icons/io5';
 
 export default function Home() {
   const [user, setUser] = useState(null);
@@ -86,87 +87,132 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Hero */}
-      <section className="bg-white">
-        <div className="max-w-6xl mx-auto px-4 py-16 md:py-24 grid md:grid-cols-2 gap-10 items-center">
-          <div>
-            <h1 className="text-3xl md:text-5xl font-extrabold leading-tight text-gray-900">
-              Clinical decision support for frontline care
-            </h1>
-            <p className="mt-4 text-gray-600 text-lg">
-              AidCare listens, extracts key clinical details, and provides triage or clinical guidance tailored to the user’s role—Community Health Workers and Consultants.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <Link href={user ? '/app' : '/signup'} className="px-5 py-3 rounded-xl bg-[#6366F1] text-white shadow hover:bg-[#5457ea] transition">{user ? 'Open dashboard' : 'Start free'}</Link>
-              <a href="#product-tour" className="px-5 py-3 rounded-xl border border-gray-200 text-gray-700 hover:bg-gray-50 transition">See product tour</a>
+      {/* Hero Section */}
+      <section id="hero" className="bg-white py-16 md:py-24">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <h1 className="text-4xl md:text-6xl font-bold text-gray-900 leading-tight">
+                AI-Powered Healthcare Support for Communities & Clinicians
+              </h1>
+              <p className="mt-6 text-lg text-gray-600 max-w-2xl">
+                A dual-purpose system designed for frontline health workers and doctors to improve access, triage, and decision-making in Nigerian healthcare.
+              </p>
+              <div className="mt-8">
+                <Link 
+                  href="/signup" 
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition"
+                  onClick={() => trackConversions.signupFromLanding()}
+                >
+                  Sign Up
+                  <IoArrowForward className="w-4 h-4" />
+                </Link>
+              </div>
+              <p className="mt-4 text-sm text-gray-500 flex items-center gap-2">
+                <IoPlayCircleOutline className="w-4 h-4" />
+                Watch the live demo of AidCare below.
+              </p>
             </div>
-            <div className="mt-6 text-xs text-gray-500">Works on web. Secure. Role-aware guidance.</div>
-          </div>
-          {/* Video placeholder */}
-          <div className="relative">
-            <div className="rounded-2xl overflow-hidden border border-gray-200 shadow-lg bg-white">
-              <div className="relative aspect-video bg-gray-100 flex items-center justify-center">
-                {/* Coming soon thumbnail */}
-                <div className="text-center">
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white shadow border border-gray-200">
-                    <span className="h-2 w-2 rounded-full bg-yellow-400"></span>
-                    <span className="text-xs font-medium text-gray-700">Product demo • Coming soon</span>
-                  </div>
-                  <p className="mt-3 text-sm text-gray-600 max-w-xs">
-                    We’re polishing the walkthrough. Sign up to get early access to the demo.
-                  </p>
-                  <div className="mt-4">
-                    <Link 
-                      href="/signup" 
-                      className="px-4 py-2 rounded-lg bg-[#6366F1] text-white hover:bg-[#5457ea] transition"
-                      onClick={() => trackConversions.signupFromLanding()}
-                    >
-                      Get early access
-                    </Link>
+            
+            {/* Hero Image/Video Placeholder */}
+            <div className="relative">
+              <div className="aspect-video bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl overflow-hidden border border-gray-200 shadow-lg">
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
+                      <IoPlayCircleOutline className="w-8 h-8 text-white" />
+                    </div>
+                    <p className="text-sm text-gray-600">Product Demo Video</p>
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="mt-3 text-xs text-gray-500">
-              Replace this thumbnail with your embedded video when it’s ready.
             </div>
           </div>
         </div>
       </section>
 
-      {/* Video Modal */}
-      {showVideo && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4"
-          onClick={() => setShowVideo(false)}
-        >
-          <div
-            className="w-full max-w-4xl bg-black rounded-xl overflow-hidden shadow-xl"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="relative aspect-video">
-              {/* Replace src with your actual video URL or embed */}
-              <iframe
-                className="absolute inset-0 h-full w-full"
-                src="https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ?autoplay=1"
-                title="AidCare Product Demo"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-              />
+      {/* Problems Section */}
+      <section id="problems" className="bg-gray-50 py-16 md:py-24">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="text-center mb-16">
+            <p className="text-sm text-gray-500 uppercase tracking-wide">The problems</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mt-2">
+              Bridging the Gap in Nigerian Healthcare
+            </h2>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Problem 1 - Overwhelmed Clinicians */}
+            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200">
+              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
+                <IoPerson className="w-6 h-6 text-blue-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                Overwhelmed clinicians with high patient loads.
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Doctors in cities face overwhelming patient volumes, leading to rushed consultations and potential misdiagnoses. The pressure to see more patients often compromises the quality of care.
+              </p>
+              <div className="aspect-video bg-gray-100 rounded-lg mb-4 overflow-hidden">
+                <img 
+                  src="/doctor_image.svg" 
+                  alt="Overwhelmed doctor" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <a href="#" className="text-blue-600 hover:text-blue-700 font-medium">
+                View Solution →
+              </a>
             </div>
-            <div className="flex justify-end bg-gray-900 p-2">
-              <button
-                className="px-3 py-1.5 text-sm rounded-md bg-white/10 text-white hover:bg-white/20"
-                onClick={() => setShowVideo(false)}
-              >
-                Close
-              </button>
+
+            {/* Problem 2 - CHW Diagnostic Support */}
+            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200">
+              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
+                <IoGrid className="w-6 h-6 text-blue-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                Community Health Workers Lacking Diagnostic Support
+              </h3>
+              <p className="text-gray-600 mb-6">
+                CHWs in remote areas lack access to diagnostic tools and real-time guidance, making it difficult to provide effective triage and initial care to their communities.
+              </p>
+              <div className="aspect-video bg-gray-100 rounded-lg mb-4 overflow-hidden">
+                <img 
+                  src="/chw_image.svg" 
+                  alt="Community Health Worker" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <a href="#" className="text-blue-600 hover:text-blue-700 font-medium">
+                View Solution →
+              </a>
+            </div>
+
+            {/* Problem 3 - Limited Access */}
+            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200">
+              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
+                <IoPerson className="w-6 h-6 text-blue-600" />
+              </div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-4">
+                Limited Access in Remote Communities
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Nigerians in remote areas struggle to access quality healthcare services, often traveling long distances for basic medical care or going without proper treatment.
+              </p>
+              <div className="aspect-video bg-gray-100 rounded-lg mb-4 overflow-hidden">
+                <img 
+                  src="/patient_image.svg" 
+                  alt="Patient in hospital" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <a href="#" className="text-blue-600 hover:text-blue-700 font-medium">
+                View Solution →
+              </a>
             </div>
           </div>
         </div>
-      )}
+      </section>
 
       {/* Key Features */}
       <section id="features" className="max-w-6xl mx-auto px-4 py-16">
@@ -234,8 +280,85 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Impact Section */}
+      <section id="impacts" className="bg-gray-50 py-16 md:py-24">
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div>
+              <p className="text-sm text-gray-500 uppercase tracking-wide mb-2">Why It Matters</p>
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-6">
+                Improving Healthcare Outcomes for Millions
+              </h2>
+              <p className="text-lg text-gray-600 mb-8">
+                AidCare is more than just an app—it's built to make quality healthcare accessible, faster, and smarter for everyone.
+              </p>
+              
+              <div className="space-y-4 mb-8">
+                <div className="flex items-center gap-3">
+                  <IoCheckmarkCircle className="w-5 h-5 text-green-500" />
+                  <span className="text-gray-700">50% faster triage decisions with AI-guided support</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <IoCheckmarkCircle className="w-5 h-5 text-green-500" />
+                  <span className="text-gray-700">Designed to support doctors nationwide through real-time clinical insights</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <IoCheckmarkCircle className="w-5 h-5 text-green-500" />
+                  <span className="text-gray-700">Built to scale across Nigerian communities with offline-first access</span>
+                </div>
+              </div>
+
+              <Link 
+                href="/signup" 
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition"
+                onClick={() => trackConversions.signupFromLanding()}
+              >
+                Get Started
+                <IoArrowForward className="w-4 h-4" />
+              </Link>
+            </div>
+
+            {/* Image Grid */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-4">
+                <div className="aspect-square bg-gray-200 rounded-lg overflow-hidden">
+                  <img 
+                    src="/healthcare_professional.svg" 
+                    alt="Healthcare Professional" 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="aspect-square bg-gray-200 rounded-lg overflow-hidden">
+                  <img 
+                    src="/patient_care.svg" 
+                    alt="Patient Care" 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+              <div className="space-y-4 mt-8">
+                <div className="aspect-square bg-gray-200 rounded-lg overflow-hidden">
+                  <img 
+                    src="/community_health.svg" 
+                    alt="Community Health" 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="aspect-square bg-gray-200 rounded-lg overflow-hidden">
+                  <img 
+                    src="/nedical_team.svg" 
+                    alt="Medical Team" 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* FAQ / Footer */}
-      <section id="faq" className="bg-gray-50">
+      <section id="faq" className="bg-white">
         <div className="max-w-6xl mx-auto px-4 py-16">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900">FAQ</h2>
           <div className="mt-6 grid md:grid-cols-2 gap-6">
