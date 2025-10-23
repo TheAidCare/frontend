@@ -42,12 +42,12 @@ export default function Home() {
         <meta property="og:title" content="AidCare – AI‑Powered Healthcare Support" />
         <meta property="og:description" content="Record, extract, and act. Role‑aware guidance for CHWs and clinicians." />
         <meta property="og:url" content="https://www.aidcare.example" />
-        <meta property="og:image" content="/vercel.svg" />
+        <meta property="og:image" content="/logo.svg" />
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="AidCare – AI‑Powered Healthcare Support" />
         <meta name="twitter:description" content="Record, extract, and act. Role‑aware guidance for CHWs and clinicians." />
-        <meta name="twitter:image" content="/vercel.svg" />
+        <meta name="twitter:image" content="/logo.svg" />
       </Head>
       {/* Top Navigation */}
       <header className="sticky top-0 z-40 bg-white/80 backdrop-blur border-b border-gray-100">
@@ -64,19 +64,19 @@ export default function Home() {
           </nav>
           <div className="flex items-center gap-2">
             {user ? (
-              <Link href="/app" className="px-4 py-2 rounded-lg bg-gray-900 text-white hover:bg-gray-800 transition">Go to app</Link>
+              <Link href="/app" className="px-4 py-2 rounded-xl bg-gray-900 text-white hover:bg-gray-800 transition-colors">Go to app</Link>
             ) : (
               <>
                 <Link 
                   href="/login" 
-                  className="px-4 py-2 rounded-lg text-gray-700 hover:bg-gray-50 transition"
+                  className="px-4 py-2 rounded-xl text-gray-700 hover:bg-gray-50 transition-colors"
                   onClick={() => trackConversions.loginFromLanding()}
                 >
                   Log in
                 </Link>
                 <Link 
                   href="/signup" 
-                  className="px-4 py-2 rounded-lg bg-gray-900 text-white hover:bg-gray-800 transition"
+                  className="px-4 py-2 rounded-xl bg-gray-900 text-white hover:bg-gray-800 transition-colors"
                   onClick={() => trackConversions.signupFromLanding()}
                 >
                   Get started
@@ -101,7 +101,7 @@ export default function Home() {
               <div className="mt-8">
                 <Link 
                   href="/signup" 
-                  className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition"
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition-colors"
                   onClick={() => trackConversions.signupFromLanding()}
                 >
                   Sign Up
@@ -143,9 +143,9 @@ export default function Home() {
           
           <div className="grid md:grid-cols-3 gap-8">
             {/* Problem 1 - Overwhelmed Clinicians */}
-            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
-                <IoPerson className="w-6 h-6 text-blue-600" />
+            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center mb-6">
+                <IoPerson className="w-6 h-6 text-indigo-600" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-4">
                 Overwhelmed clinicians with high patient loads.
@@ -160,15 +160,15 @@ export default function Home() {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <a href="#" className="text-blue-600 hover:text-blue-700 font-medium">
+              <a href="#" className="text-indigo-600 hover:text-indigo-700 font-medium transition-colors">
                 View Solution →
               </a>
             </div>
 
             {/* Problem 2 - CHW Diagnostic Support */}
-            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
-                <IoGrid className="w-6 h-6 text-blue-600" />
+            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center mb-6">
+                <IoGrid className="w-6 h-6 text-indigo-600" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-4">
                 Community Health Workers Lacking Diagnostic Support
@@ -183,15 +183,15 @@ export default function Home() {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <a href="#" className="text-blue-600 hover:text-blue-700 font-medium">
+              <a href="#" className="text-indigo-600 hover:text-indigo-700 font-medium transition-colors">
                 View Solution →
               </a>
             </div>
 
             {/* Problem 3 - Limited Access */}
-            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-6">
-                <IoPerson className="w-6 h-6 text-blue-600" />
+            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200 hover:shadow-md transition-shadow">
+              <div className="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center mb-6">
+                <IoPerson className="w-6 h-6 text-indigo-600" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 mb-4">
                 Limited Access in Remote Communities
@@ -206,7 +206,7 @@ export default function Home() {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <a href="#" className="text-blue-600 hover:text-blue-700 font-medium">
+              <a href="#" className="text-indigo-600 hover:text-indigo-700 font-medium transition-colors">
                 View Solution →
               </a>
             </div>
@@ -218,15 +218,15 @@ export default function Home() {
       <section id="features" className="max-w-6xl mx-auto px-4 py-16">
         <h2 className="text-2xl md:text-3xl font-bold text-gray-900">What you can do with AidCare</h2>
         <div className="mt-8 grid md:grid-cols-3 gap-6">
-          <div className="p-6 rounded-2xl border border-gray-200 bg-white shadow-sm">
+          <div className="p-6 rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow">
             <h3 className="font-semibold text-gray-900">Voice to structured data</h3>
             <p className="mt-2 text-gray-600 text-sm">Record the consultation. AidCare extracts symptoms, history, and flags to speed up documentation.</p>
           </div>
-          <div className="p-6 rounded-2xl border border-gray-200 bg-white shadow-sm">
+          <div className="p-6 rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow">
             <h3 className="font-semibold text-gray-900">Role‑aware guidance</h3>
             <p className="mt-2 text-gray-600 text-sm">CHWs receive triage actions; consultants get differentials, investigations, and alerts.</p>
           </div>
-          <div className="p-6 rounded-2xl border border-gray-200 bg-white shadow-sm">
+          <div className="p-6 rounded-2xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow">
             <h3 className="font-semibold text-gray-900">Patient timeline</h3>
             <p className="mt-2 text-gray-600 text-sm">Quick access to past consultations and documents for context.</p>
           </div>
@@ -238,15 +238,15 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-4 py-16">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900">How to use AidCare</h2>
           <ol className="mt-8 grid md:grid-cols-3 gap-6 list-decimal list-inside">
-            <li className="p-6 rounded-2xl bg-white border border-gray-200 shadow-sm">
+            <li className="p-6 rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
               <span className="font-semibold text-gray-900">Create or select a patient</span>
               <p className="mt-2 text-gray-600 text-sm">Use the left sidebar to search or add a new patient.</p>
             </li>
-            <li className="p-6 rounded-2xl bg-white border border-gray-200 shadow-sm">
+            <li className="p-6 rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
               <span className="font-semibold text-gray-900">Capture the encounter</span>
               <p className="mt-2 text-gray-600 text-sm">Tap “Use audio” to record, or type notes/upload lab images.</p>
             </li>
-            <li className="p-6 rounded-2xl bg-white border border-gray-200 shadow-sm">
+            <li className="p-6 rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
               <span className="font-semibold text-gray-900">Review guidance & export</span>
               <p className="mt-2 text-gray-600 text-sm">See triage or clinical support, then generate a shareable report.</p>
             </li>
@@ -261,22 +261,22 @@ export default function Home() {
       <section id="product-tour" className="max-w-6xl mx-auto px-4 py-16">
         <h2 className="text-2xl md:text-3xl font-bold text-gray-900">Navigating the app</h2>
         <div className="mt-8 grid md:grid-cols-3 gap-6">
-          <div className="p-6 rounded-2xl border bg-white border-gray-200 shadow-sm">
+          <div className="p-6 rounded-2xl border bg-white border-gray-200 shadow-sm hover:shadow-md transition-shadow">
             <h3 className="font-semibold text-gray-900">Sidebar</h3>
             <p className="mt-2 text-gray-600 text-sm">Access patients, create new records, and open organization onboarding.</p>
           </div>
-          <div className="p-6 rounded-2xl border bg-white border-gray-200 shadow-sm">
+          <div className="p-6 rounded-2xl border bg-white border-gray-200 shadow-sm hover:shadow-md transition-shadow">
             <h3 className="font-semibold text-gray-900">Header</h3>
             <p className="mt-2 text-gray-600 text-sm">Patient details and session context appear here for quick reference.</p>
           </div>
-          <div className="p-6 rounded-2xl border bg-white border-gray-200 shadow-sm">
+          <div className="p-6 rounded-2xl border bg-white border-gray-200 shadow-sm hover:shadow-md transition-shadow">
             <h3 className="font-semibold text-gray-900">Workspace</h3>
             <p className="mt-2 text-gray-600 text-sm">Record audio, add notes, upload documents, and review AI guidance.</p>
           </div>
         </div>
         <div className="mt-8 flex flex-wrap gap-3">
-          <Link href={user ? '/app' : '/signup'} className="px-5 py-3 rounded-xl bg-[#6366F1] text-white hover:bg-[#5457ea] transition">{user ? 'Open dashboard' : 'Try AidCare'}</Link>
-          <Link href="/login" className="px-5 py-3 rounded-xl border border-gray-200 text-gray-700 hover:bg-gray-50 transition">Log in</Link>
+                <Link href={user ? '/app' : '/signup'} className="px-5 py-3 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition-colors">{user ? 'Open dashboard' : 'Try AidCare'}</Link>
+          <Link href="/login" className="px-5 py-3 rounded-xl border border-gray-200 text-gray-700 hover:bg-gray-50 transition-colors">Log in</Link>
         </div>
       </section>
 
@@ -310,7 +310,7 @@ export default function Home() {
 
               <Link 
                 href="/signup" 
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition-colors"
                 onClick={() => trackConversions.signupFromLanding()}
               >
                 Get Started
@@ -362,11 +362,11 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-4 py-16">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-900">FAQ</h2>
           <div className="mt-6 grid md:grid-cols-2 gap-6">
-            <div className="p-6 rounded-2xl bg-white border border-gray-200 shadow-sm">
+            <div className="p-6 rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
               <h3 className="font-semibold text-gray-900">Who is AidCare for?</h3>
               <p className="mt-2 text-gray-600 text-sm">Frontline Community Health Workers and clinical consultants who need faster documentation and guidance.</p>
             </div>
-            <div className="p-6 rounded-2xl bg-white border border-gray-200 shadow-sm">
+            <div className="p-6 rounded-2xl bg-white border border-gray-200 shadow-sm hover:shadow-md transition-shadow">
               <h3 className="font-semibold text-gray-900">Does it work offline?</h3>
               <p className="mt-2 text-gray-600 text-sm">Core features require connectivity for AI processing. Documents and patient lists cache locally in the browser.</p>
             </div>
@@ -386,14 +386,14 @@ export default function Home() {
               <div className="flex flex-wrap gap-3 md:justify-end">
                 <Link 
                   href="/signup" 
-                  className="px-5 py-3 rounded-xl bg-[#6366F1] text-white font-medium hover:bg-[#5457ea] transition"
+                  className="px-5 py-3 rounded-xl bg-indigo-600 text-white font-medium hover:bg-indigo-700 transition-colors"
                   onClick={() => trackConversions.signupFromLanding()}
                 >
                   Sign up today
                 </Link>
                 <Link 
                   href="/login" 
-                  className="px-5 py-3 rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-50 transition"
+                  className="px-5 py-3 rounded-xl border border-gray-300 text-gray-700 hover:bg-gray-50 transition-colors"
                   onClick={() => trackConversions.loginFromLanding()}
                 >
                   Log in
